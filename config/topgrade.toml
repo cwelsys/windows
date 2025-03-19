@@ -14,17 +14,17 @@
 # Sudo command to be used
 # sudo_command = "sudo"
 
-# disable = [
-# 	"rustup",
-# 	"bun",
-# 	"containers",
-# 	"mas",
-# 	"vim",
-# 	"chocolatey",
-# 	"winget",
-# 	"microsoft_store",
-# 	"yarn",
-# ]
+disable = [
+	"rustup",
+	"bun",
+	"containers",
+	"mas",
+	"vim",
+	"chocolatey",
+	"winget",
+	"microsoft_store",
+	"yarn",
+]
 # Disable specific steps - same options as the command line flag
 
 # Ignore failures for these steps
@@ -64,7 +64,7 @@ cleanup = true
 # notify_each_step = false
 
 # Skip sending a notification at the end of a run (default: false)
-# skip_notify = true
+skip_notify = true
 
 # The Bash-it branch to update (default: "stable")
 # bashit_branch = "stable"
@@ -260,4 +260,3 @@ self_rename = true
 # and the update will be installed system-wide, i.e., available to all users.
 # (default: false)
 # use_sudo = false
-

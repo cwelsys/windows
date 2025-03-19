@@ -597,7 +597,6 @@ $symlinks = @{
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\.config\starship"                                                                      = ".\config\starship"
 	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
 	"$HOME\Documents\Game"                                                                        = "D:\game"
 }

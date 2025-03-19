@@ -5,20 +5,18 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 # 🚌 Tls12
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-
-# 🔗 Aliases
-Set-Alias -Name cat -Value bat
-Set-Alias -Name df -Value Get-Volume
-Set-Alias -Name vi -Value nvim
-Set-Alias -Name vim -Value nvim
-Set-Alias -Name c -Value clear
-Set-Alias -Name lg -Value lazygit
-Set-Alias -Name r -Value reload
+# 📦 Modules
+Import-Module -Name Microsoft.WinGet.CommandNotFound
+Import-Module scoop-completion -Global
+Import-Module posh-git -Global
+Import-Module Terminal-Icons -Global
+Import-Module -Name CompletionPredictor
+# Import-Module PsFzf
 
 # 🌏 Env
 $Env:DOTS = Split-Path (Get-ChildItem $PSScriptRoot | Where-Object FullName -EQ $PROFILE.CurrentUserAllHosts).Target
 $Env:PWSH = Join-Path -Path "$Env:DOTS" -ChildPath "pwsh"
-$Env:STARSHIP_CONFIG = "$ENV:DOTS\config\starship\starship.toml"
+$Env:STARSHIP_CONFIG = "$ENV:PWSH\starship.toml"
 $Env:_ZO_DATA_DIR = $Env:DOTS
 
 # 📝 Editor
@@ -29,10 +27,6 @@ else {
 	else { $Env:EDITOR = "notepad" }
 }
 
-# 🐳 Modules
-# Import-Module -Name Terminal-Icons
-# Import-Module PSFzf
-
 # 🐶 FastFetch
 if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
 	if ([Environment]::GetCommandLineArgs().Contains("-NonInteractive")) {
@@ -42,13 +36,15 @@ if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
 }
 
 # 🐚 Prompt
-function Invoke-Starship-TransientFunction {
-	&starship module character
+# function Invoke-Starship-TransientFunction {
+# 	&starship module character
+# }
+# Invoke-Expression (&starship init powershell)
+# Enable-TransientPrompt
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+	oh-my-posh init pwsh --config "$Env:PWSH\posh.toml" | Invoke-Expression
+	$Env:POSH_GIT_ENABLED = $true
 }
-Invoke-Expression (&starship init powershell)
-Enable-TransientPrompt
-Invoke-Expression (& { ( zoxide init powershell --cmd cd | Out-String ) })
-
 # 🛠️ Include
 foreach ($module in $((Get-ChildItem -Path "$env:PWSH\module\*" -Include *.psm1).FullName )) {
 	Import-Module "$module" -Global
@@ -56,5 +52,23 @@ foreach ($module in $((Get-ChildItem -Path "$env:PWSH\module\*" -Include *.psm1)
 foreach ($file in $((Get-ChildItem -Path "$env:PWSH\config\*" -Include *.ps1).FullName)) {
 	. "$file"
 }
+# 🦆 yazi
+function y {
+	$tmp = [System.IO.Path]::GetTempFileName()
+	yazi $args --cwd-file="$tmp"
+	$cwd = Get-Content -Path $tmp -Encoding UTF8
+	if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+		Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
+	}
+	Remove-Item -Path $tmp
+}
+# 🍫 Choco
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+	Import-Module "$ChocolateyProfile"
+}
+# 🥣 Scoop
+Invoke-Expression (&scoop-search --hook)
 
-
+# 💤 zoxide
+Invoke-Expression (& { ( zoxide init powershell --cmd cd | Out-String ) })
