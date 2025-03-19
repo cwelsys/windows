@@ -1,0 +1,54 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "79193b3"
+hash = "fb4650dc4e95b9b56dcadab3608dcfed"
+
+[[plugin.deps]]
+use = "lpnh/fg"
+rev = "92edf0b"
+hash = "bf34a775050aec528822d524f0f93713"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "79193b3"
+hash = "748a68f7271c60161ff649e2699ea9e6"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "79193b3"
+hash = "3e934f2d6f703ee6a6ff4242460dfa7e"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-filter"
+rev = "79193b3"
+hash = "475bcde87495ff68f017f39e0a138ac1"
+
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "c76bf4f"
+hash = "7246659779ff5bca5f4a461bdab6e8df"
+
+[[plugin.deps]]
+use = "imsi32/yatline-githead"
+rev = "3b0eb7c"
+hash = "7ae04eb50f224080cafdde377e9cfd5d"
+
+[[plugin.deps]]
+use = "imsi32/yatline"
+rev = "6b0fc1e"
+hash = "6e0f07994039f84a2c57c573bb6ceb79"
+
+[[flavor.deps]]
+use = "dangooddd/kanagawa"
+rev = "31167ed"
+hash = "7a1de9de34cdecfdf41405cbc485b34"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "68326b4"
+hash = "800799d6ab64ece50a4e516641b96fa0"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "68326b4"
+hash = "4f33260910430eca8a7937d9c2cfd855"

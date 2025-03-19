@@ -1,0 +1,78 @@
+[
+  {
+    "Name": "PSWindowsUpdate",
+    "Version": "2.2.1.5"
+  },
+  {
+    "Name": "BurntToast",
+    "Version": "0.8.5"
+  },
+  {
+    "Name": "CompletionPredictor",
+    "Version": "0.1.1"
+  },
+  {
+    "Name": "DockerCompletion",
+    "Version": "1.2704.0.241216"
+  },
+  {
+    "Name": "DotNetVersionLister",
+    "Version": "3.1.4"
+  },
+  {
+    "Name": "Microsoft.PowerShell.SecretManagement",
+    "Version": "1.1.2"
+  },
+  {
+    "Name": "Microsoft.PowerShell.SecretStore",
+    "Version": "1.0.6"
+  },
+  {
+    "Name": "Microsoft.PowerShell.ThreadJob",
+    "Version": "2.2.0"
+  },
+  {
+    "Name": "Microsoft.WinGet.Client",
+    "Version": "1.10.340"
+  },
+  {
+    "Name": "Microsoft.WinGet.CommandNotFound",
+    "Version": "1.0.4.0"
+  },
+  {
+    "Name": "posh-git",
+    "Version": "1.1.0"
+  },
+  {
+    "Name": "powershell-yaml",
+    "Version": "0.4.12"
+  },
+  {
+    "Name": "PSFzf",
+    "Version": "2.6.7"
+  },
+  {
+    "Name": "PSParseHTML",
+    "Version": "1.0.2"
+  },
+  {
+    "Name": "PSScriptAnalyzer",
+    "Version": "1.24.0"
+  },
+  {
+    "Name": "PSScriptTools",
+    "Version": "2.50.0"
+  },
+  {
+    "Name": "PSToml",
+    "Version": "0.4.0"
+  },
+  {
+    "Name": "Terminal-Icons",
+    "Version": "0.11.0"
+  },
+  {
+    "Name": "ThreadJob",
+    "Version": "2.1.0"
+  }
+]

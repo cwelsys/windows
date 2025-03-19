@@ -1,0 +1,427 @@
+:root {
+	--rosewater: #f4dbd6;
+	--flamingo: #f0c6c6;
+	--pink: #f5bde6;
+	--mauve: #c6a0f6;
+	--red: #ed8796;
+	--maroon: #ee99a0;
+	--peach: #f5a97f;
+	--yellow: #eed49f;
+	--green: #a6da95;
+	--teal: #8bd5ca;
+	--sky: #91d7e3;
+	--sapphire: #7dc4e4;
+	--blue: #8aadf4;
+	--lavender: #b7bdf8;
+	--text: #cad3f5;
+	--subtext1: #b8c0e0;
+	--subtext0: #a5adcb;
+	--overlay2: #939ab7;
+	--overlay1: #8087a2;
+	--overlay0: #6e738d;
+	--surface2: #5b6078;
+	--surface1: #494d64;
+	--surface0: #363a4f;
+	--base: #24273a;
+	--mantle: rgba(30, 32, 48, 0.5);
+	--crust: rgba(24, 25, 38, 0.5);
+}
+
+* {
+	font-size: 18px;
+	font-weight: 500;
+	font-family: 'JetBrainsMono NFP';
+	color: var(--text);
+	margin: 0;
+	padding: 0;
+}
+.yasb-bar {
+	padding: 0;
+	margin: 0;
+}
+.widget {
+	background-color: var(--base);
+	padding: 0 8px;
+	margin: 0;
+}
+.widget .label {
+	padding: 1px 2px 1px 2px;
+}
+.widget .label.alt {
+	padding: 1px 8px 1px 8px;
+}
+.active-window-widget {
+	border-radius: 15px;
+	margin-left: 8px;
+}
+.container-left,
+.container-center,
+.container-right {
+	margin: 0;
+	padding: 0;
+}
+
+.komorebi-active-layout {
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+.komorebi-active-layout .label {
+	font-weight: 500;
+	padding: 0 4px 0 4px;
+}
+.apps-widget .widget-container,
+.komorebi-workspaces .widget-container,
+.komorebi-active-layout .widget-container {
+	background-color: var(--base);
+	margin: 4px 0px 4px 0;
+	border-radius: 15px;
+}
+.komorebi-active-layout {
+	padding: 0 8px 0 0px;
+}
+.komorebi-active-layout .label {
+	color: var(--lavender);
+}
+.komorebi-workspaces {
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.komorebi-workspaces .ws-btn {
+	background-color: var(--surface2);
+	margin: 0 4px 0 4px;
+	color: transparent;
+	width: 12px;
+	height: 12px;
+}
+.komorebi-workspaces .ws-btn:hover,
+.komorebi-workspaces .ws-btn.populated:hover {
+	background-color: var(--text);
+}
+.komorebi-workspaces .ws-btn.active {
+	width: 26px;
+	height: 12px;
+	background-color: var(--green);
+	border-radius: 5px;
+}
+
+.apps-widget .widget-container {
+	margin-right: 2px;
+}
+.apps-widget {
+	margin: 0 2px 0 2px;
+	padding: 0 8px 0 8px;
+	border-radius: 15px;
+	background-color: var(--base);
+}
+.clock-widget {
+	border-radius: 15px;
+}
+
+.uptime {
+	font-size: 20px;
+	font-style: italic;
+	margin-bottom: 10px;
+	color: var(--lavender);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.power-menu-widget {
+	padding: 0 12px;
+	background-color: var(--base);
+	border-radius: 15px;
+	margin: 0 8px 0 0px;
+}
+.power-menu-widget .label {
+	color: var(--red);
+	background-color: var(--base);
+}
+.power-menu-popup {
+	border-radius: 15px;
+}
+.power-menu-popup .button {
+	width: 240px;
+	height: 120px;
+	font-family: 'Segoe UI';
+	background-color: var(--base);
+	border-color: transparent;
+	border-radius: 15px;
+}
+.power-menu-popup .button.hover {
+	background-color: var(--surface0);
+	border: 1px solid var(--surface0);
+}
+.power-menu-popup .button .label {
+	margin: 0 8px;
+	padding: 0 8px;
+	color: var(--subtext0);
+	font-family: 'JetBrainsMono NFP';
+	font-size: 20px;
+}
+.power-menu-popup .button .icon {
+	font-size: 43px;
+	padding-top: 8px;
+	color: var(--subtext0);
+}
+.power-menu-popup .button.cancel .icon,
+.power-menu-popup .button.cancel .label {
+	color: var(--red);
+}
+.power-menu-popup .button.hibernate .icon,
+.power-menu-popup .button.hibernate .label {
+	color: var(--yellow);
+}
+.power-menu-popup .button.restart .icon,
+.power-menu-popup .button.restart .label {
+	color: var(--green);
+}
+.power-menu-popup .button.shutdown .icon,
+.power-menu-popup .button.shutdown .label {
+	color: var(--peach);
+}
+.power-menu-popup .button.signout .icon,
+.power-menu-popup .button.signout .label {
+	color: var(--pink);
+}
+.power-menu-popup .button.lock .icon,
+.power-menu-popup .button.lock .label {
+	color: var(--blue);
+}
+
+.language-widget .icon,
+.volume-widget .icon,
+.memory-widget .icon,
+.disk-widget .icon,
+.cpu-widget .icon,
+.weather-widget.icon {
+	margin: 0 2px 0 0;
+}
+
+.language-widget .icon {
+	color: var(--maroon);
+	font-size: 16px;
+}
+.memory-widget .icon {
+	color: var(--peach);
+	font-size: 16px;
+}
+.cpu-widget .icon {
+	color: var(--green);
+	font-size: 16px;
+}
+.volume-widget .icon {
+	font-size: 20px;
+	padding: 0 2px 0 4px;
+	color: var(--mauve);
+}
+.volume-widget {
+	margin: 0 8px 0 0;
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+.weather-widget .icon {
+	font-size: 24px;
+}
+.weather-widget .icon.sunnyDay {
+	color: var(--yellow);
+}
+.weather-widget .icon.rainyDay,
+.weather-widget .icon.rainyNight {
+	color: var(--blue);
+}
+.weather-widget .icon.cloudyDay,
+.weather-widget .icon.cloudyNight {
+	color: var(--sapphire);
+}
+.weather-widget .icon.default {
+	color: var(--green);
+}
+.weather-widget .icon.snowyIcyDay,
+.weather-widget .icon.snowyIcyNight {
+	color: var(--lavender);
+}
+.weather-widget .icon.clearNight {
+	color: var(--teal);
+}
+
+.media-widget {
+	padding: 0 8px;
+	margin: 0 8px;
+	border-radius: 15px;
+	margin-right: 8px;
+}
+.media-widget .label {
+	background-color: transparent;
+}
+.media-widget .btn {
+	color: var(--subtext0);
+	font-family: Segoe Fluent Icons;
+	padding: 0 3px 0 0;
+}
+.media-widget .btn:hover {
+	color: var(--peach);
+}
+.media-widget .btn.play {
+	background-color: var(--mantle);
+	border-radius: 15px;
+}
+.media-widget .btn.disabled:hover,
+.media-widget .btn.disabled {
+	color: var(--surface1);
+	background-color: transparent;
+}
+
+/* WIFI WIDGET */
+.wifi-widget {
+	padding: 0 4px 0 2px;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.wifi-widget .icon {
+	color: #43d8d8;
+	padding: 0 2px 0 8px;
+	margin: 0;
+}
+
+/* GITHUB WIDGET */
+.github-widget {
+	padding: 0 4px;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.github-widget .icon {
+	font-size: 18px;
+	color: var(--text);
+	padding: 0 2px 3px 4px;
+	margin: 0;
+}
+.github-widget .icon.new-notification {
+	color: var(--red);
+}
+
+.github-menu {
+	background-color: var(--mantle);
+	max-height: 500px;
+	min-height: 500px;
+	min-width: 420px;
+}
+.github-menu .header {
+	border-bottom: 1px solid var(--base);
+	font-size: 15px;
+	font-weight: 400;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	padding: 8px;
+	color: var(--lavender);
+	background-color: var(--base);
+}
+.github-menu .footer {
+	border-top: 1px solid var(--base);
+	font-size: 14px;
+	padding: 4px 8px 6px 8px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: var(--lavender);
+	background-color: rgba(17, 17, 27, 0.75);
+}
+.github-menu .contents {
+	background-color: rgba(17, 17, 27, 0.2);
+}
+.github-menu .contents .item {
+	min-height: 40px;
+	padding: 6px 0;
+	border-bottom: 1px solid var(--crust);
+}
+.github-menu .contents .item:hover {
+	background-color: var(--mantle);
+	border-bottom: 1px solid rgba(255, 255, 255, 0);
+}
+.github-menu .contents .item .title,
+.github-menu .contents .item .description {
+	color: var(--overlay2);
+	font-family: Segoe UI;
+}
+.github-menu .contents .item .title {
+	font-size: 16px;
+	font-weight: 600;
+}
+.github-menu .contents .item .description {
+	font-size: 14px;
+	font-weight: 500;
+}
+.github-menu .contents .item.new .title,
+.github-menu .contents .item.new .description {
+	color: var(--text);
+}
+.github-menu .contents .item .icon {
+	font-size: 16px;
+	padding-right: 0;
+	padding-left: 8px;
+	padding-right: 4px;
+	color: var(--lavender);
+}
+.github-menu .contents .item.new .icon {
+	color: var(--green);
+}
+
+/* Notifications Widget Styling */
+.notification-widget {
+	padding: 0 2px;
+	margin: 0 8px 0 0;
+	border-radius: 15px;
+	background-color: var(--base);
+}
+
+.notification-widget .icon {
+	font-size: 18px;
+	color: var(--text);
+	padding: 0 2px 0 0;
+	margin: 0;
+}
+
+.notification-widget .icon.new-notification {
+	color: var(--green);
+}
+
+/* Microphone Widget Styling */
+.microphone-widget {
+	padding: 0 4px;
+	background-color: var(--base);
+}
+
+.microphone-widget .icon {
+	font-size: 18px;
+	color: var(--sapphire);
+	padding: 0 2px 0 0;
+	margin: 0;
+}
+
+.microphone-widget .label {
+	color: var(--text);
+}
+
+/* When microphone is muted */
+.microphone-widget.muted .icon,
+.microphone-widget.muted .label {
+	color: var(--red);
+}
+
+/* Update Check Widget Styling */
+.update-check-widget {
+	padding: 0 4px;
+	margin: 0 8px 0 0;
+	border-radius: 15px;
+	background-color: var(--base);
+}
+
+.update-check-widget .widget-container.winget .icon,
+.update-check-widget .widget-container.windows .icon {
+	font-size: 18px;
+	color: var(--peach); /* Default state color */
+	padding: 0 2px 0 4px;
+	margin: 0;
+}
+
+.update-check-widget .widget-container.winget .label,
+.update-check-widget .widget-container.windows .label {
+	color: var(--text); /* Default state color */
+	padding: 1px 2px;
+	margin: 0 4px 0 2px;
+}
