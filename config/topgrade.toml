@@ -260,3 +260,4 @@ self_rename = true
 # and the update will be installed system-wide, i.e., available to all users.
 # (default: false)
 # use_sudo = false
+

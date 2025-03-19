@@ -72,16 +72,16 @@
 			"additionalArgs": ["--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements"]
 		},
 		"choco": {
-			"autoInstall": false,
+			"autoInstall": true,
 			"packageList": [
 				// { "packageName": "choco-cleaner" },
-				// { "packageName": "vmwareworkstation" },
-				// { "packageName": "Everything" }
+				{ "packageName": "vmwareworkstation" },
+				{ "packageName": "topgrade" }
 			],
 			"additionalArgs": ["-y", "-r", "--no-progress"]
 		},
 		"scoop": {
-			"autoInstall": true,
+			"autoInstall": false,
 			"bucketList": [
 				{ "bucketName": "extras" },
 				{ "bucketName": "versions" },
@@ -194,7 +194,7 @@
 				{ "packageName": "obsidian" },
 				{ "packageName": "openrgb" },
 				{ "packageName": "sops" },
-				{ "packageName": "topgrade" },
+				// { "packageName": "topgrade" },
 				{ "packageName": "iperf3" },
 				{ "packageName": "keyboard-chatter-blocker" },
 				{ "packageName": "librehardwaremonitor" },
@@ -227,7 +227,7 @@
 				"yusukebe/gh-markdown-preview",
 				"Shresht7/gh-license"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"commandName": "pipx",

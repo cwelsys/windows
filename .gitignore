@@ -9,6 +9,7 @@ db.zo
 *.log.*
 *.bak
 *.backup
+.env
 .ignore
 .idea/
 .vscode/

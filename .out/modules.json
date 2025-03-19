@@ -48,6 +48,10 @@
     "Version": "0.4.12"
   },
   {
+    "Name": "ps-color-scripts",
+    "Version": "2024.2.24.2003"
+  },
+  {
     "Name": "PSFzf",
     "Version": "2.6.7"
   },

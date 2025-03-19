@@ -597,7 +597,9 @@ $symlinks = @{
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\.config\starship"                                                                      = '.\config\starship'
+	"$HOME\.config\starship"                                                                      = ".\config\starship"
+	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
+	"$HOME\Documents\Game"                                                                        = "D:\game"
 }
 
 foreach ($symlink in $symlinks.GetEnumerator()) {
@@ -863,5 +865,5 @@ Write-Host "│                                                                 
 Write-Host "└────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor "Green"
 
 Write-ColorText "`n`n{Grey}For more information, please visit: {Blue}https://github.com/cwelsys/windows`n"
-Write-ColorText "🔆 {Gray}Submit an issue via: {Blue}https://github.com/cwelsys/windows/issues/new"
-Write-ColorText "🔆 {Gray}Contact me via email: {Cyan}cwel@cwel.sh"
+Write-ColorText "😤 {Gray}Submit an issue via: {Blue}https://github.com/cwelsys/windows/issues/new"
+Write-ColorText "📨 {Gray}Contact me via email: {Cyan}cwel@cwel.sh"
