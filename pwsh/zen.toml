@@ -2,6 +2,7 @@
 
 version = 3
 final_space = true
+auto_upgrade = true
 console_title_template = '{{ .Shell }} in {{ .Folder }}'
 
 [palette]
@@ -68,22 +69,24 @@ foreground = 'p:Overlay0'
 
 [[blocks.segments]]
 template = '{{ .Path }} '
-foreground = 'p:Pink'
+foreground = 'p:Blue'
 type = 'path'
 style = 'plain'
 
 [blocks.segments.properties]
 style = 'full'
+cache_duration = 'none'
 
 [[blocks.segments]]
 type = 'git'
-style = 'plain'
+style = 'powerline'
 foreground = 'p:Overlay2'
 background = 'transparent'
 template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
 
 [blocks.segments.properties]
 branch_icon = ''
+cache_duration = 'none'
 commit_icon = '@'
 fetch_status = true
 
@@ -93,17 +96,19 @@ overflow = 'hide'
 
 [[blocks.segments]]
 template = '{{ (div ((sub .PhysicalTotalMemory .PhysicalFreeMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB '
-foreground = 'p:Blue'
+foreground = 'p:Teal'
 type = 'sysinfo'
 style = 'plain'
 
 [[blocks.segments]]
-template = ' {{ .FormattedMs }} '
+template = '{{ .FormattedMs }}'
 foreground = 'p:Peach'
+background = 'transparent'
 type = 'executiontime'
 style = 'plain'
 
 [blocks.segments.properties]
+cache_duration = 'none'
 threshold = 5000
 
 [[blocks]]
@@ -113,10 +118,10 @@ newline = true
 
 [[blocks.segments]]
 leading_diamond = ''
-trailing_diamond = ' '
-template = '   {{ if ne .Status "stopped" }} {{ .Artist }} ✦  {{ .Track }}{{ end }} '
+trailing_diamond = ''
+template = '   {{ if ne .Status "stopped" }} {{ .Artist }} - {{ .Track }}{{ end }} '
 foreground = 'p:Green'
-background = 'p:Surface1'
+background = 'p:Base'
 type = 'spotify'
 style = 'diamond'
 

@@ -72,12 +72,8 @@
 			"additionalArgs": ["--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements"]
 		},
 		"choco": {
-			"autoInstall": true,
-			"packageList": [
-				// { "packageName": "choco-cleaner" },
-				{ "packageName": "vmwareworkstation" },
-				{ "packageName": "topgrade" }
-			],
+			"autoInstall": false,
+			"packageList": [{ "packageName": "choco-cleaner" }],
 			"additionalArgs": ["-y", "-r", "--no-progress"]
 		},
 		"scoop": {
@@ -143,6 +139,7 @@
 				{ "packageName": "chafa" },
 				{ "packageName": "curl" },
 				{ "packageName": "dbeaver" },
+				{ "packageName": "dust" },
 				{ "packageName": "eza" },
 				{ "packageName": "fastfetch" },
 				{ "packageName": "fd" },
@@ -158,6 +155,7 @@
 				{ "packageName": "mpv" },
 				{ "packageName": "navi" },
 				{ "packageName": "neovim" },
+				{ "packageName": "onefetch" },
 				{ "packageName": "poppler" },
 				{ "packageName": "ripgrep" },
 				{ "packageName": "shfmt" },
@@ -228,13 +226,6 @@
 				"Shresht7/gh-license"
 			],
 			"install": true
-		},
-		{
-			"commandName": "pipx",
-			"commandCheck": "pipx list",
-			"commandInvoke": "pipx install",
-			"addonList": ["cookiecutter", "copier", "pdm", "uv"],
-			"install": false
 		}
 	],
 	"powershell": {

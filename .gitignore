@@ -14,7 +14,7 @@ db.zo
 .idea/
 .vscode/
 .vagrant/
-pwsh/scripts
+pwsh/fortune.txt
 config/lazygit/state.yml
 node_modules
 nvim/lazy-lock.json

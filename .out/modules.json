@@ -32,10 +32,6 @@
     "Version": "2.2.0"
   },
   {
-    "Name": "Microsoft.WinGet.Client",
-    "Version": "1.10.340"
-  },
-  {
     "Name": "Microsoft.WinGet.CommandNotFound",
     "Version": "1.0.4.0"
   },

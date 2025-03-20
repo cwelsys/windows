@@ -1,31 +1,39 @@
-# 👾 UTF8
+﻿# 👾 Encoding
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 🚌 Tls12
+# 🚌 Tls
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-# 📦 Modules
-Import-Module -Name Microsoft.WinGet.CommandNotFound
-Import-Module scoop-completion -Global
-Import-Module posh-git -Global
-Import-Module Terminal-Icons -Global
-Import-Module -Name CompletionPredictor
-# Import-Module PsFzf
 
 # 🌏 Env
 $Env:DOTS = Split-Path (Get-ChildItem $PSScriptRoot | Where-Object FullName -EQ $PROFILE.CurrentUserAllHosts).Target
 $Env:PWSH = Join-Path -Path "$Env:DOTS" -ChildPath "pwsh"
+$Env:_ZO_DATA_DIR = "$Env:DOTS"
 $Env:STARSHIP_CONFIG = "$ENV:PWSH\starship.toml"
-$Env:_ZO_DATA_DIR = $Env:DOTS
 
 # 📝 Editor
 if (Get-Command code -ErrorAction SilentlyContinue) { $Env:EDITOR = "code" }
 else {
 	if (Get-Command nvim -ErrorAction SilentlyContinue) { $Env:EDITOR = "nvim" }
-	elseif (Get-Command vim -ErrorAction SilentlyContinue) { $Env:EDITOR = "vim" }
 	else { $Env:EDITOR = "notepad" }
 }
+
+# 📦 Imports
+Import-Module PSFzf
+Import-Module CompletionPredictor
+Import-Module Catppuccin
+
+# 🐚 Prompt
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+	oh-my-posh init pwsh --config "$Env:PWSH\zen.toml" | Invoke-Expression
+	$Env:POSH_GIT_ENABLED = $true
+}
+
+# function Invoke-Starship-TransientFunction {
+# 	&starship module character
+# }
+# Invoke-Expression (&starship init powershell)
+# Enable-TransientPrompt
 
 # 🐶 FastFetch
 if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
@@ -35,23 +43,25 @@ if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
 	fastfetch
 }
 
-# 🐚 Prompt
-# function Invoke-Starship-TransientFunction {
-# 	&starship module character
-# }
-# Invoke-Expression (&starship init powershell)
-# Enable-TransientPrompt
-if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-	oh-my-posh init pwsh --config "$Env:PWSH\posh.toml" | Invoke-Expression
-	$Env:POSH_GIT_ENABLED = $true
-}
-# 🛠️ Include
+# 😎 Stolye
+$Flavor = $Catppuccin['Mocha']
+
+$PSStyle.Formatting.Debug = $Flavor.Sky.Foreground()
+$PSStyle.Formatting.Error = $Flavor.Red.Foreground()
+$PSStyle.Formatting.ErrorAccent = $Flavor.Blue.Foreground()
+$PSStyle.Formatting.FormatAccent = $Flavor.Teal.Foreground()
+$PSStyle.Formatting.TableHeader = $Flavor.Rosewater.Foreground()
+$PSStyle.Formatting.Verbose = $Flavor.Yellow.Foreground()
+$PSStyle.Formatting.Warning = $Flavor.Peach.Foreground()
+
+# 🛠️ Includes
 foreach ($module in $((Get-ChildItem -Path "$env:PWSH\module\*" -Include *.psm1).FullName )) {
 	Import-Module "$module" -Global
 }
 foreach ($file in $((Get-ChildItem -Path "$env:PWSH\config\*" -Include *.ps1).FullName)) {
 	. "$file"
 }
+
 # 🦆 yazi
 function y {
 	$tmp = [System.IO.Path]::GetTempFileName()
@@ -62,13 +72,14 @@ function y {
 	}
 	Remove-Item -Path $tmp
 }
-# 🍫 Choco
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-	Import-Module "$ChocolateyProfile"
-}
-# 🥣 Scoop
+
+# 🍫 Choco: `refreshenv`
+# if (Get-Command choco -ErrorAction SilentlyContinue) {
+# 	Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 -Global
+# }
+
+# 🥣 Scoop search
 Invoke-Expression (&scoop-search --hook)
 
 # 💤 zoxide
-Invoke-Expression (& { ( zoxide init powershell --cmd cd | Out-String ) })
+Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })
