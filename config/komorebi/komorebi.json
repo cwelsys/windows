@@ -65,6 +65,11 @@
 		},
 		{
 			"kind": "Exe",
+			"id": "YoloMouse.exe",
+			"matching_strategy": "Equals"
+		},
+		{
+			"kind": "Exe",
 			"id": "SnippingTool.exe",
 			"matching_strategy": "Equals"
 		},

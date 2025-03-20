@@ -599,13 +599,14 @@ $symlinks = @{
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
 	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
 	"$HOME\Documents\Game"                                                                        = "D:\game"
+
 }
 
 foreach ($symlink in $symlinks.GetEnumerator()) {
 	Write-Verbose -Message "Creating symlink for $(Resolve-Path $symlink.Value) --> $($symlink.Key)"
 	Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 	New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
-	Write-ColorText "{Blue}[symlink] {Green}$(Resolve-Path $symlink.Value) {Yellow}--> {Gray}$($symlink.Key)"
+	Write-ColorText "{ Blue }[symlink] { Green }$(Resolve-Path $symlink.Value) { Yellow }--> { Gray }$($symlink.Key)"
 }
 Refresh ($i++)
 
@@ -659,36 +660,36 @@ foreach ($env in $envVars) {
 		}
 
 		if ($shouldUpdate) {
-			Write-Verbose "Set environment variable of $envCommand`: $envKey -> $envValue"
+			Write-Verbose "Set environment variable of $envCommand`: $envKey - > $envValue"
 			try {
 				[System.Environment]::SetEnvironmentVariable($envKey, $envValue, "User")
-				Write-ColorText "{Blue}[environment] {Green}(updated) {Magenta}$envKey {Yellow}--> {Gray}$envValue"
+				Write-ColorText "{ Blue }[environment] { Green }(updated) { Magenta }$envKey { Yellow }--> { Gray }$envValue"
 			} catch {
 				Write-Error "An error occurred: $_"
 			}
 		} else {
-			Write-ColorText "{Blue}[environment] {Yellow}(exists) {Magenta}$envKey {Yellow}--> {Gray}$existingValue"
+			Write-ColorText "{ Blue }[environment] { Yellow }(exists) { Magenta }$envKey { Yellow }--> { Gray }$existingValue"
 		}
 	} else {
-		Write-ColorText "{Blue}[environment] {Red}(skipped) {Magenta}$envKey {Yellow}--> {Gray}Command '$envCommand' not found"
+		Write-ColorText "{ Blue }[environment] { Red }(skipped) { Magenta }$envKey { Yellow }--> { Gray }Command '$envCommand' not found"
 	}
 }
 
 # Handle gh-dash special case
 if (Get-Command gh -ErrorAction SilentlyContinue) {
-	$ghDashAvailable = (& gh.exe extension list | Select-String -Pattern "dlvhdr/gh-dash" -SimpleMatch -CaseSensitive)
+	$ghDashAvailable = (& gh.exe extension list | Select-String -Pattern "dlvhdr / gh-dash" -SimpleMatch -CaseSensitive)
 	if ($ghDashAvailable) {
 		$ghDashConfigPath = Join-Path -Path $HOME -ChildPath ".config\gh-dash\config.yml"
 		if (![System.Environment]::GetEnvironmentVariable("GH_DASH_CONFIG")) {
 			try {
 				[System.Environment]::SetEnvironmentVariable("GH_DASH_CONFIG", $ghDashConfigPath, "User")
-				Write-ColorText "{Blue}[environment] {Green}(added) {Magenta}GH_DASH_CONFIG {Yellow}--> {Gray}$ghDashConfigPath"
+				Write-ColorText "{ Blue }[environment] { Green }(added) { Magenta }GH_DASH_CONFIG { Yellow }--> { Gray }$ghDashConfigPath"
 			} catch {
 				Write-Error -ErrorAction Stop "An error occurred: $_"
 			}
 		} else {
 			$value = [System.Environment]::GetEnvironmentVariable("GH_DASH_CONFIG")
-			Write-ColorText "{Blue}[environment] {Yellow}(exists) {Magenta}GH_DASH_CONFIG {Yellow}--> {Gray}$value"
+			Write-ColorText "{ Blue }[environment] { Yellow }(exists) { Magenta }GH_DASH_CONFIG { Yellow }--> { Gray }$value"
 		}
 	}
 }

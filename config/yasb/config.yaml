@@ -162,7 +162,7 @@ widgets:
       app_list:
         - { icon: "\udb82\ude1e", launch: 'code' }
         - { icon: "\uf489", launch: 'wt' }
-        - { icon: "\uf1ff", launch: "C:\\Users\\cwel\\AppData\\Local\\Programs\\Legcord\\Legcord.exe" }
+        # - { icon: "\uf1ff", launch: "C:\\Users\\cwel\\AppData\\Local\\Discord\\Update.exe" }
         # - { icon: "\uf0a2", launch: 'notification_center' }
         - { icon: "\ueb51", launch: 'cmd.exe /c start ms-settings:' }
         - { icon: "\uf46a", launch: 'cmd.exe /c start ms-settings:windowsupdate' }
