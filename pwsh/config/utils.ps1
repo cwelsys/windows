@@ -14,7 +14,11 @@ Set-Alias -Name 'su' -Value gsudo
 Set-Alias -Name 'vi' -Value nvim
 Set-Alias -Name 'c' -Value clear
 Set-Alias -Name 'df' -Value Get-Volume
+Set-Alias -Name 'komorel' -Value Restart-TheThings
 Set-Alias -Name 'spongob' -Value Invoke-Spongebob
+Set-Alias -Name 'komozz' -Value Invoke-KomoFzf
+Set-Alias -Name '?scoop' -Value Sync-ScoopApps
+Set-Alias -Name '?winget' -Value Sync-WingetApps
 
 # 🏖️ Functions
 function e { Invoke-Item . }
@@ -60,7 +64,7 @@ function Get-PubIp {
 }
 
 function deltmp {
-  Write-Host "Deleting temp data..."
+  Write-ColorText "{Gray}Deleting temp data..."
 
   $path1 = "C" + ":\Windows\Temp"
   Get-ChildItem $path1 -Force -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
@@ -71,16 +75,16 @@ function deltmp {
   $path3 = "C" + ":\Users\*\AppData\Local\Temp"
   Get-ChildItem $path3 -Force -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 
-  Write-Host "Temp data deleted successfully." -ForegroundColor Green
+  Write-ColorText "{Green}Temp data deleted successfully."
 }
 function Update-Powershell {
   if (-not $Global:canConnectToGithub) {
-    Write-Host "Cannot connect to GitHub. Please check your internet connection." -ForegroundColor Yellow
+    Write-ColorText "{Yellow}Cannot connect to GitHub. Please check your internet connection."
     return
   }
 
   try {
-    Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
+    Write-ColorText "{Cyan}Checking for PowerShell updates..."
     $updateNeeded = $false
     $currentVersion = $PSVersionTable.PSVersion.ToString()
     $githubAPIurl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
@@ -92,14 +96,14 @@ function Update-Powershell {
     }
 
     if ($updateNeeded) {
-      Write-Host "Updating PowerShell..." -ForegroundColor Yellow
+      Write-ColorText "{Yellow}Updating PowerShell..."
       winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
-      Write-Host "PowerShell has been updated. Please restart your terminal" -ForegroundColor Magenta
+      Write-ColorText "{Magenta}PowerShell has been updated. Please restart your terminal"
     } else {
-      Write-Host "PowerShell is up to date." -ForegroundColor Green
+      Write-ColorText "{Green}PowerShell is up to date."
     }
   } catch {
-    Write-Host "Failed to Update Powershell. Error = $_" -ForegroundColor Red
+    Write-ColorText "{Red}Failed to Update Powershell. Error = $_"
   }
 }
 function reload {
@@ -217,83 +221,455 @@ function Invoke-Spongebob {
   $output = $null
 }
 
-function Select-Apps {
-  param (
-    [string[]]$apps
+function Write-ColorText {
+  param ([string]$Text, [switch]$NoNewLine)
+
+  $hostColor = $Host.UI.RawUI.ForegroundColor
+
+  $Text.Split( [char]"{", [char]"}" ) | ForEach-Object { $i = 0; } {
+    if ($i % 2 -eq 0) {	Write-Host $_ -NoNewline }
+    else {
+      if ($_ -in [enum]::GetNames("ConsoleColor")) {
+        $Host.UI.RawUI.ForegroundColor = ($_ -as [System.ConsoleColor])
+      }
+    }
+    $i++
+  }
+
+  if (!$NoNewLine) { Write-Host }
+  $Host.UI.RawUI.ForegroundColor = $hostColor
+}
+
+function Invoke-KomoFzf {
+  param(
+    [ValidateSet("exe", "title", "class")]
+    [string]$Kind = "exe",
+    [string]$PythonPath = "python",
+    [string]$ScriptPath = (Join-Path "$Env:PWSH\config\KomorebiShellExtension" "KomorebiRuleManager.py")
   )
 
-  $header = "`n  CTRL+A-Select All   CTRL+D-Deselect All   CTRL+T-Toggle All`n" +
-  "`nName" + "`n" + ("─" * 15)
+  $windows = Get-Process |
+  Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne "" } |
+  Select-Object Name, MainWindowTitle
 
-  $apps = $apps | fzf --prompt="Select Apps  " --height=80% --layout=reverse --cycle `
-    --margin="1,15" --multi --header=$header --padding=1 `
-    --bind="ctrl-a:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all" `
+  if (-not $windows) {
+    Write-ColorText "{Gray}No windows open?"
+    return
+  }
 
-  return $apps
+  # Build a list of lines: "ProcessName : WindowTitle"
+  $list = $windows | ForEach-Object {
+    "{0} : {1}" -f $_.Name, $_.MainWindowTitle
+  }
+
+  Write-ColorText "{Gray}Hint: {s} add manage | {d} add ignore | {Enter/Return} for default (ignore)"
+
+  $choice = $list | fzf --height 40% --prompt="Target: " `
+    --expect "s,d" `
+    --bind "enter:accept"
+
+  if ($choice.Count -lt 2) {
+    Write-ColorText "{Gray}Bye bye"
+    return
+  }
+
+  $pressedKey = $choice[0]
+  $selectedLine = $choice[1]
+  $exe = ($selectedLine -split ':')[0].Trim()
+  if ($Kind -eq "exe" -and -not $exe.ToLower().EndsWith(".exe")) {
+    $exe += ".exe"
+  }
+
+  switch ($pressedKey) {
+    's' {
+      Write-ColorText "{Green}Managing $exe..."
+      & $PythonPath $ScriptPath $exe $Kind "--manage"
+    }
+    'd' {
+      Write-ColorText "{Gray}Ignoring $exe..."
+      & $PythonPath $ScriptPath $exe $Kind "--ignore"
+    }
+    default {
+      Write-ColorText "{Magenta}Ignoring $exe..."
+      & $PythonPath $ScriptPath $exe $Kind "--ignore"
+    }
+  }
 }
 
-function List-ScoopApps {
-  $apps = $(scoop list | Select-Object -ExpandProperty "Name").Split("\n")
+function Restart-TheThings {
+  param(
+    [switch]$Bar,
+    [switch]$Yasb
+  )
 
-  return $apps
+  Write-ColorText "{Magenta}Stopping Komorebi & whkd..."
+  komorebic stop --whkd | Out-Null
+
+  Write-ColorText "{Blue}Starting Komorebi & whkd..."
+  if ($Bar) {
+    komorebic start --whkd --bar | Out-Null
+  } else {
+    komorebic start --whkd | Out-Null
+  }
+  Write-ColorText "{Gray}Komorebi (with whkd) has been restarted successfully."
+  if ($Yasb) {
+    Write-ColorText "{Gray}Reloading Yasb..."
+    yasbc reload
+  }
 }
 
-function Update-ScoopApps {
-  $appsSet = New-Object System.Collections.Generic.HashSet[[String]]
-  $installedApps = List-ScoopApps
+function Sync-WingetApps {
+  param(
+    [string]$ConfigPath = "$Env:DOTS\config.jsonc",
+    [switch]$ShowFiltered = $false
+  )
 
-  Write-Host -NoNewline "`e[1A`e[0K"
-  foreach ($app in Select-Apps $installedApps) {
-    if ($app) {
-      $app = $app.Split(" ")[0]
-      $appsSet.Add($app) > $null
+  # Parse the JSON
+  $jsonText = Get-Content $ConfigPath | Where-Object { $_ -notmatch '^\s*//' } | Out-String
+  $config = $jsonText | ConvertFrom-Json
+
+  # Define what's already in the config - make this case-insensitive
+  $wantedWinget = @()
+  if ($config.installSource.winget -and $config.installSource.winget.packageList) {
+    $wantedWinget = $config.installSource.winget.packageList.packageId | ForEach-Object { $_.ToLower() }
+  }
+
+  # Get installed packages from winget
+  Write-ColorText "{Gray}Fetching installed winget packages..."
+  $wingetOutput = winget list --source winget
+
+  # Find the header row and table content
+  $headerIndex = $wingetOutput | Where-Object { $_ -match 'Name\s+Id\s+Version' } | ForEach-Object { $wingetOutput.IndexOf($_) }
+
+  if ($null -eq $headerIndex -or $headerIndex -lt 0) {
+    Write-Error "Could not find winget list header row"
+    return
+  }
+
+  # Skip header row and separator line
+  $dataRows = $wingetOutput | Select-Object -Skip ($headerIndex + 2)
+
+  # Parse the columns - extract ID (second column)
+  $wingetInstalled = @()
+  foreach ($row in $dataRows) {
+    if (-not [string]::IsNullOrWhiteSpace($row)) {
+      # Split by multiple spaces - the second column should be the ID
+      $columns = $row -split '\s{2,}'
+      if ($columns.Count -ge 3) {
+        $packageId = $columns[1].Trim()
+        $wingetInstalled += $packageId
+      }
     }
   }
 
-  if ($appsSet.Length) {
-    $apps_string = ($appsSet -split ",")
-    Write-Host "Selected apps: [$apps_string]"
-  } else {
-    Write-Host "No app was selected to update"
-    return
-  }
-
-  $confirm = $(Read-Host "Do you want to update the selected apps? [Y/n] (Default is `"Y`") ").ToUpper()
-
-  if ($confirm -eq "Y" -or $confirm -eq "") {
-    scoop update $apps_string
-  } else {
-    Write-Host "Update was cancelled"
-    return
-  }
-}
-
-function Uninstall-ScoopApps {
-  $appsSet = New-Object System.Collections.Generic.HashSet[[String]]
-  $installedApps = List-ScoopApps
-
-  Write-Host -NoNewline "`e[1A`e[0K"
-  foreach ($app in Select-Apps $installedApps) {
-    if ($app) {
-      $app = $app.Split(" ")[0]
-      $appsSet.Add($app) > $null
+  foreach ($row in $dataRows) {
+    if ($row -match "msstore" -or $row -match "Microsoft Store") {
+      # Try to extract MS Store package IDs
+      if ($row -match '(\S+\.[\w\.]+)') {
+        $msStoreId = $matches[1]
+        if (-not $wingetInstalled.Contains($msStoreId)) {
+          $wingetInstalled += $msStoreId
+        }
+      }
     }
   }
 
-  if ($appsSet.Length) {
-    $apps_string = ($appsSet -split ",")
-    Write-Host "Selected apps: [$apps_string]"
-  } else {
-    Write-Host "No app was selected to uninstall"
+  # Filter out system packages, Steam games, etc.
+  $excludePatterns = @(
+    "arp\\machine", # Registry entries (including Steam)
+    "Nvidia\.",
+    "Microsoft\."
+    # "MSIX\."
+    # "msstore",
+    # "Windows\.",
+    # "^unknown$"
+  )
+
+  $filteredWinget = $wingetInstalled | Where-Object {
+    $pkg = $_.ToLower()  # Case-insensitive matching
+    $exclude = $false
+    foreach ($pattern in $excludePatterns) {
+      if ($pkg -match $pattern.ToLower()) {
+        $exclude = $true
+        break
+      }
+    }
+    -not $exclude
+  }
+
+  # Debug info
+  if ($ShowFiltered) {
+    $filtered = $wingetInstalled | Where-Object { $filteredWinget -notcontains $_ }
+    Write-ColorText "{Gray}Filtered out these packages ($($filtered.Count) of $($wingetInstalled.Count)):"
+    $filtered | Select-Object -First 20 | ForEach-Object { Write-ColorText "{Gray}  $_" }
+    if ($filtered.Count -gt 20) {
+      Write-ColorText "{Gray}  ... and $($filtered.Count - 20) more"
+    }
+  }
+
+  # Compare with config
+  $extraWinget = $filteredWinget | Where-Object { $wantedWinget -notcontains $_.ToLower() }
+
+  if (-not $extraWinget) {
+    Write-ColorText "{Gray}No additional Winget packages to add to config."
     return
   }
 
-  $confirm = $(Read-Host "Do you want to uninstall the selected apps? [Y/n] (Default is `"Y`") ").ToUpper()
+  Write-ColorText "{Gray}Found $($extraWinget.Count) additional packages not in config."
 
-  if ($confirm -eq "Y" -or $confirm -eq "") {
-    scoop uninstall $apps_string
-  } else {
-    Write-Host "Uninstall was cancelled"
+  # fzf prompt
+  $toAdd = $extraWinget | Sort-Object | fzf --multi --prompt "Packages> " --header "Tab or {s} to select, {a} to select all, Enter to finish" --bind "s:toggle+down,a:select-all"
+
+
+  if (-not $toAdd) {
+    Write-ColorText "{Gray}No packages selected. Config unchanged."
     return
   }
+
+  # Read file as string to preserve precious JSON comments
+  $fileLines = Get-Content $ConfigPath
+
+  # Find winget section
+  $wingetLineNumber = 0
+  for ($i = 0; $i -lt $fileLines.Count; $i++) {
+    if ($fileLines[$i] -match '"winget"\s*:') {
+      $wingetLineNumber = $i
+      break
+    }
+  }
+
+  if ($wingetLineNumber -eq 0) {
+    Write-Error "Could not find winget section in config file."
+    return
+  }
+
+  # Find packageList following winget section
+  $packageListLineNumber = 0
+  for ($i = $wingetLineNumber; $i -lt $fileLines.Count; $i++) {
+    if ($fileLines[$i] -match '"packageList"\s*:') {
+      $packageListLineNumber = $i
+      break
+    }
+  }
+
+  if ($packageListLineNumber -eq 0) {
+    Write-Error "Could not find packageList in winget section."
+    return
+  }
+
+  # Find the opening bracket after packageList
+  $startLine = 0
+  for ($i = $packageListLineNumber; $i -lt $fileLines.Count; $i++) {
+    if ($fileLines[$i] -match '\[') {
+      $startLine = $i
+      break
+    }
+  }
+
+  if ($startLine -eq 0) {
+    Write-Error "Could not find opening bracket for packageList array."
+    return
+  }
+
+  # Find closing bracket of the array by counting brackets
+  $endLine = $startLine
+  $bracketCount = 1
+
+  for ($i = $startLine + 1; $i -lt $fileLines.Count; $i++) {
+    $openCount = ([regex]::Matches($fileLines[$i], '\[').Count)
+    $bracketCount += $openCount
+
+    $closeCount = ([regex]::Matches($fileLines[$i], '\]').Count)
+    $bracketCount -= $closeCount
+
+    if ($bracketCount -eq 0) {
+      $endLine = $i
+      break
+    }
+  }
+
+  if ($bracketCount -ne 0) {
+    Write-Error "Could not locate end of winget packageList array."
+    return
+  }
+
+  # Determine indentation by looking at existing entries
+  $indent = ""
+  for ($i = $startLine + 1; $i -lt $endLine; $i++) {
+    if ($fileLines[$i] -match '^\s*{') {
+      $indent = [regex]::Match($fileLines[$i], '^\s*').Value
+      break
+    }
+  }
+  if ($indent -eq "") {
+    # Default indent
+    $indent = "				"
+  }
+
+  # Format new entries
+  $lastEntry = $fileLines[$endLine - 1].Trim()
+
+  if (-not $lastEntry.EndsWith(",")) {
+    $fileLines[$endLine - 1] = $fileLines[$endLine - 1] + ","
+  }
+
+  # Create new entries in the same format as existing ones
+  $newEntries = @()
+  foreach ($pkg in $toAdd) {
+    $newEntries += "$indent{ `"packageId`": `"$pkg`" },"
+  }
+  # Remove trailing comma from the last new entry
+  $newEntries[$newEntries.Count - 1] = $newEntries[$newEntries.Count - 1].TrimEnd(",")
+
+  # Insert new entries before the closing bracket
+  $updatedLines = $fileLines[0..($endLine - 1)] +
+  $newEntries +
+  $fileLines[$endLine..($fileLines.Count - 1)]
+
+  # Write the updated file back
+  $updatedLines | Out-File $ConfigPath -Encoding utf8
+
+  Write-ColorText "{Green}Added the following Winget packages to your config:"
+  $toAdd | ForEach-Object { Write-ColorText "{Gray} - $_" }
 }
+
+function Sync-ScoopApps {
+  param(
+    [string]$ConfigPath = "$Env:DOTS\config.jsonc"
+  )
+
+  # Parse the JSON
+  $jsonText = Get-Content $ConfigPath | Where-Object { $_ -notmatch '^\s*//' } | Out-String
+  $config = $jsonText | ConvertFrom-Json
+
+  # Define whats already on the JSON
+  $wantedScoop = $config.installSource.scoop.packageList.packageName
+
+  # Get installed packages
+  $scoopInstalled = (scoop list | Select-Object -Skip 2) |
+  Select-Object -ExpandProperty Name
+
+  # Compare them
+  $extraScoop = $scoopInstalled | Where-Object { $wantedScoop -notcontains $_ }
+
+  if (-not $extraScoop) {
+    Write-ColorText "{Gray}No additional Scoop packages to add to config."
+    return
+  }
+
+  # fzf prompt
+  $toAdd = $extraScoop | fzf --multi --prompt "Packages> " --header "Tab or {s} to select, {a} to select all, Enter to finish" --bind "s:toggle+down,a:select-all"
+
+  if (-not $toAdd) {
+    Write-ColorText "{Gray}No packages selected. Config unchanged."
+    return
+  }
+
+  # Read file as string to preserve precious JSON comments
+  $fileLines = Get-Content $ConfigPath
+
+  # Find scoop section, packageList array
+  $scoopLineNumber = 0
+  for ($i = 0; $i -lt $fileLines.Count; $i++) {
+    if ($fileLines[$i] -match '"scoop"\s*:') {
+      $scoopLineNumber = $i
+      break
+    }
+  }
+
+  if ($scoopLineNumber -eq 0) {
+    Write-Error "Could not find scoop section in config file."
+    return
+  }
+
+  # Find packageList following scoop section
+  $packageListLineNumber = 0
+  for ($i = $scoopLineNumber; $i -lt $fileLines.Count; $i++) {
+    if ($fileLines[$i] -match '"packageList"\s*:') {
+      $packageListLineNumber = $i
+      break
+    }
+  }
+
+  if ($packageListLineNumber -eq 0) {
+    Write-Error "Could not find packageList in scoop section."
+    return
+  }
+
+  # Find the opening bracket after packageList
+  $startLine = 0
+  for ($i = $packageListLineNumber; $i -lt $fileLines.Count; $i++) {
+    if ($fileLines[$i] -match '\[') {
+      $startLine = $i
+      break
+    }
+  }
+
+  if ($startLine -eq 0) {
+    Write-Error "Could not find opening bracket for packageList array."
+    return
+  }
+
+  # Find closing bracket of the array by counting brackets
+  $endLine = $startLine
+  $bracketCount = 1
+
+  for ($i = $startLine + 1; $i -lt $fileLines.Count; $i++) {
+    $openCount = ([regex]::Matches($fileLines[$i], '\[').Count)
+    $bracketCount += $openCount
+
+    $closeCount = ([regex]::Matches($fileLines[$i], '\]').Count)
+    $bracketCount -= $closeCount
+
+    if ($bracketCount -eq 0) {
+      $endLine = $i
+      break
+    }
+  }
+
+  if ($bracketCount -ne 0) {
+    Write-Error "Could not locate end of scoop packageList array."
+    return
+  }
+
+  # Determine indentation by looking at existing entries
+  $indent = ""
+  for ($i = $startLine + 1; $i -lt $endLine; $i++) {
+    if ($fileLines[$i] -match '^\s*{') {
+      $indent = [regex]::Match($fileLines[$i], '^\s*').Value
+      break
+    }
+  }
+  if ($indent -eq "") {
+    # Default indent if we couldn't determine it
+    $indent = "				"
+  }
+
+  # Format new entries
+  $lastEntry = $fileLines[$endLine - 1].Trim()
+
+  if (-not $lastEntry.EndsWith(",")) {
+    $fileLines[$endLine - 1] = $fileLines[$endLine - 1] + ","
+  }
+
+  # Create new entries in the same format as existing ones
+  $newEntries = @()
+  foreach ($pkg in $toAdd) {
+    $newEntries += "$indent{ `"packageName`": `"$pkg`" },"
+  }
+  # Remove trailing comma from the last new entry
+  $newEntries[$newEntries.Count - 1] = $newEntries[$newEntries.Count - 1].TrimEnd(",")
+
+  # Insert new entries before the closing bracket
+  $updatedLines = $fileLines[0..($endLine - 1)] +
+  $newEntries +
+  $fileLines[$endLine..($fileLines.Count - 1)]
+
+  # Write the updated file back
+  $updatedLines | Out-File $ConfigPath -Encoding utf8
+
+  Write-ColorText "{Green}Packages have been added the config:"
+  $toAdd | ForEach-Object { Write-ColorText "{Gray} - $_" }
+}
+
+

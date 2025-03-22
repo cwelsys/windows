@@ -81,5 +81,6 @@ function y {
 # 🥣 Scoop search
 Invoke-Expression (&scoop-search --hook)
 
+
 # 💤 zoxide
 Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })

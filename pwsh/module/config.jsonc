@@ -67,14 +67,7 @@
 				{ "packageId": "AmN.yasb" },
 				{ "packageId": "File-New-Project.EarTrumpet" },
 				{ "packageId": "RamenSoftware.Windhawk" },
-				{ "packageId": "StartIsBack.StartAllBack" },
-
-				// Added by sync script
-				{ "packageId": "LesFerch.WinSetView" },
-				{ "packageId": "Logitech.GHUB" },
-				{ "packageId": "Logitech.OptionsPlus" },
-				{ "packageId": "Spotify.Spotify" },
-				{ "packageId": "RARLab.WinRAR" }
+				{ "packageId": "StartIsBack.StartAllBack" }
 			],
 			"additionalArgs": ["--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements"]
 		},
@@ -214,26 +207,7 @@
 				{ "packageName": "winaero-tweaker" },
 
 				// Fonts
-				{ "packageName": "Maple-Mono" },
-
-				// Added by sync script
-				{ "packageName": "via" },
-				{ "packageName": "depends" },
-				{ "packageName": "everything" },
-				{ "packageName": "nirlauncher" },
-				{ "packageName": "pathofbuilding-community" },
-				{ "packageName": "wezterm" },
-				{ "packageName": "﻿altsnap" },
-				{ "packageName": "bulk-crap-uninstaller" },
-				{ "packageName": "msys2" },
-				{ "packageName": "oh-my-posh" },
-				{ "packageName": "qbittorrent" },
-				{ "packageName": "sqlite" },
-				{ "packageName": "topgrade" },
-				{ "packageName": "audacity" },
-				{ "packageName": "systeminformer-nightly" },
-				{ "packageName": "﻿upx" },
-				{ "packageName": "﻿vlc" }
+				{ "packageName": "Maple-Mono" }
 			],
 			"additionalArgs": []
 		}

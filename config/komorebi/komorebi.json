@@ -12,20 +12,9 @@
 	"stackbar": {
 		"height": 35,
 		"mode": "OnStack",
-		"tabs": {
-			"width": 300,
-			"font_family": "JetBrainsMono NFP",
-			"font_size": 30
-		}
+		"tabs": { "width": 300, "font_family": "JetBrainsMono NFP", "font_size": 30 }
 	},
-	"animation": {
-		"enabled": true,
-		"fps": 120,
-		"style": {
-			"movement": "EaseOutBack",
-			"transparency": "Linear"
-		}
-	},
+	"animation": { "enabled": true, "fps": 120, "style": { "movement": "EaseOutBack", "transparency": "Linear" } },
 	"border": true,
 	"border_implementation": "Komorebi",
 	"border_width": 5,
@@ -45,157 +34,56 @@
 	},
 	"transparency": false,
 	"transparency_alpha": 240,
-	"transparency_ignore_rules": [
-		{
-			"kind": "Title",
-			"id": "Youtube",
-			"matching_strategy": "Contains"
-		}
-	],
+	"transparency_ignore_rules": [{ "kind": "Title", "id": "Youtube", "matching_strategy": "Contains" }],
 	"ignore_rules": [
-		{
-			"kind": "Exe",
-			"id": "ShareX",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "uninstall.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "YoloMouse.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "SnippingTool.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Title",
-			"id": "Settings",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Title",
-			"id": "Microsoft Store",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Title",
-			"id": "Media Player",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "vmware.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "yasb.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "kleopatra.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "OpenRGB.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "PowerToys.FileLocksmithUI.exe",
-			"matching_strategy": "Equals"
-		}
+		{ "kind": "Exe", "id": "ShareX", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "uninstall.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "Toolbox.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "YoloMouse.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "SnippingTool.exe", "matching_strategy": "Equals" },
+		{ "kind": "Title", "id": "Settings", "matching_strategy": "Equals" },
+		{ "kind": "Title", "id": "Microsoft Store", "matching_strategy": "Equals" },
+		{ "kind": "Title", "id": "Media Player", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "vmware.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "yasb.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "kleopatra.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "OpenRGB.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "PowerToys.FileLocksmithUI.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "matching_strategy": "Equals", "id": "SymlinkCreator.exe" }
 	],
 	"floating_applications": [
-		{
-			"kind": "Exe",
-			"id": "explorer.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "foobar2000.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "VirtualBox.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "ShareX.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "Notepad.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Class",
-			"id": "VbaWindow",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "bluebubbles_app.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "ApplicationFrameHost.exe",
-			"matching_strategy": "Equals"
-		},
-		{
-			"kind": "Exe",
-			"id": "qbittorrent.exe",
-			"matching_strategy": "Equals"
-		}
+		{ "kind": "Exe", "id": "explorer.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "foobar2000.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "VirtualBox.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "ShareX.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "Notepad.exe", "matching_strategy": "Equals" },
+		{ "kind": "Class", "id": "VbaWindow", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "bluebubbles_app.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "ApplicationFrameHost.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "qbittorrent.exe", "matching_strategy": "Equals" }
 	],
 	"monitors": [
 		{
 			"window_based_work_area_offset_limit": 2,
-			"window_based_work_area_offset": {
-				"left": 1000,
-				"top": 0,
-				"right": 2000,
-				"bottom": 0
-			},
+			"window_based_work_area_offset": { "left": 1000, "top": 0, "right": 2000, "bottom": 0 },
 			"workspaces": [
 				{
 					"name": "1",
 					"layout": "UltrawideVerticalStack",
-					"window_container_behaviour_rules": {
-						"0": "Create",
-						"4": "Append"
-					}
+					"window_container_behaviour_rules": { "0": "Create", "4": "Append" }
 				},
 				{
 					"name": "2",
 					"layout": "UltrawideVerticalStack",
-					"window_container_behaviour_rules": {
-						"0": "Create",
-						"4": "Append"
-					}
+					"window_container_behaviour_rules": { "0": "Create", "4": "Append" }
 				},
 				{
 					"name": "3",
 					"layout": "UltrawideVerticalStack",
-					"window_container_behaviour_rules": {
-						"0": "Create",
-						"4": "Append"
-					}
+					"window_container_behaviour_rules": { "0": "Create", "4": "Append" }
 				}
 			]
 		}
-	]
+	],
+	"manage_rules": []
 }

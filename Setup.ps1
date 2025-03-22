@@ -598,9 +598,9 @@ $symlinks = @{
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
 	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
+	"$HOME\app"                                                                                   = "D:\rice\utils\app"
 	"$HOME\Documents\Game"                                                                        = "D:\game"
 	"$HOME\.config\dust"                                                                          = ".\config\dust"
-
 }
 
 foreach ($symlink in $symlinks.GetEnumerator()) {
