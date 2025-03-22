@@ -1,0 +1,3 @@
+[submodule "pwsh/config/KomorebiShellExtension"]
+	path = pwsh/config/KomorebiShellExtension
+	url = https://github.com/Zira3l137/KomorebiShellExtension
