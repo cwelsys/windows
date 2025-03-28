@@ -113,9 +113,10 @@ widgets:
       label_no_window: ''
       label_icon: true
       label_icon_size: 16
-      max_length: 56
+      #TODO: add callbacks
+      # max_length: 56
       max_length_ellipsis: '...'
-      monitor_exclusive: true
+      # monitor_exclusive: true
 
   clock:
     type: 'yasb.clock.ClockWidget'
@@ -173,11 +174,15 @@ widgets:
   media:
     type: 'yasb.media.MediaWidget'
     options:
-      label: "<span>\uf001</span> {title} - {artist}"
-      label_alt: "<span>\uf001</span> {title}"
+      label: "<span>\uf001</span> {title}"
+      label_alt: "<span>\uf001</span> {title} - {artist}"
       max_field_size:
         label: 20
         label_alt: 30
+      callbacks:
+        on_left: 'toggle_label'
+        on_middle: 'do_nothing' #TODO: write script to launch/focus application where active media is playing
+        on_right: 'do_nothing' #TODO: launch sound panel ?
       show_thumbnail: false
       controls_only: false
       controls_left: true

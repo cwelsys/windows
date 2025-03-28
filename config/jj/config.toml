@@ -1,0 +1,11 @@
+[user]
+name = "cwelsys"
+email = "cwel@cwel.sh"
+
+[ui]
+pager = "delta"
+editor = "nvim"
+diff-editor = ["nvim", "-c", "DiffEditor $left $right $output"]
+
+[ui.diff]
+format = "git"

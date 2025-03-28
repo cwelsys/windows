@@ -1,13 +1,13 @@
-# 🔗 Aliases
-Set-Alias -Name 'which' -Value Get-CommandInfo
+# 🔗 Aliases  - replaced a lot of the unix style replacements with gow
+Set-Alias -Name 'whicc' -Value Get-CommandInfo # intentional typo
+Set-Alias -Name 'fstring' -Value 'Find-String' # or grep
+Set-Alias -Name 'newfile' -Value New-File # or touch
+Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue
+# Set-Alias -Name 'rm' -Value 'Remove-MyItem'
 Set-Alias -Name 'rl' -Value reload
 Set-Alias -Name 'rst' -Value restart
-Set-Alias -Name 'touch' -Value New-File
 Set-Alias -Name 'mkcd' -Value 'New-Directory'
 Set-Alias -Name 'ff' -Value 'Find-File'
-Set-Alias -Name 'grep' -Value 'Find-String'
-Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue
-Set-Alias -Name 'rm' -Value 'Remove-MyItem'
 Set-Alias -Name 'lg' -Value lazygit
 Set-Alias -Name 'vim' -Value nvim
 Set-Alias -Name 'su' -Value gsudo
@@ -19,6 +19,10 @@ Set-Alias -Name 'spongob' -Value Invoke-Spongebob
 Set-Alias -Name 'komozz' -Value Invoke-KomoFzf
 Set-Alias -Name '?scoop' -Value Sync-ScoopApps
 Set-Alias -Name '?winget' -Value Sync-WingetApps
+Set-Alias -Name 'IP?' -Value Get-IPLocation
+Set-Alias -Name 'npm-ls' -Value 'Get-NpmGlobalPackages'
+Set-Alias -Name 'bun-ls' -Value 'Get-BunGlobalPackages'
+Set-Alias -Name 'pnpm-ls' -Value 'Get-PnpmGlobalPackages'
 
 # 🏖️ Functions
 function e { Invoke-Item . }
@@ -32,6 +36,7 @@ function HKLM { Set-Location HKLM: }
 function HKCU { Set-Location HKCU: }
 function flushdns { ipconfig /flushdns }
 function displaydns { ipconfig /displaydns }
+function yasbrel { yasbc reload }
 function lock { Invoke-Command { rundll32.exe user32.dll, LockWorkStation } }
 function hibernate { shutdown.exe /h }
 function shutdown { Stop-Computer }
@@ -111,6 +116,7 @@ function reload {
   elseif (Test-Path -Path $PROFILE.CurrentUserAllHosts) { . $PROFILE.CurrentUserAllHosts }
 }
 function restart { Get-Process -Id $PID | Select-Object -ExpandProperty Path | ForEach-Object { Invoke-Command { & "$_" } -NoNewScope } }
+
 function Get-CommandInfo {
   [CmdletBinding()]
   param (
@@ -672,4 +678,22 @@ function Sync-ScoopApps {
   $toAdd | ForEach-Object { Write-ColorText "{Gray} - $_" }
 }
 
+# List NPM (NodeJS) Global Packages
+# To export global packages to a file, for-example: `npm-ls > global_packages.txt`
+function Get-NpmGlobalPackages { (npm ls -g | Select-Object -skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } } }
+function Get-BunGlobalPackages { (bun pm ls -g | Select-Object -Skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } } }
+function Get-PnpmGlobalPackages { (pnpm ls -g | Select-Object -Skip 5) | ForEach-Object { $name = $_.Split()[0]; $version = $_.Split()[1]; Write-Output "$name@$version" } }
+function Get-IPLocation {
+  param([string]$IPaddress = "")
 
+  try {
+    if ($IPaddress -eq "" ) { $IPaddress = read-host "Enter IP address to locate" }
+
+    $result = Invoke-RestMethod -Method Get -Uri "http://ip-api.com/json/$IPaddress"
+    write-output $result
+    return $result
+  } catch {
+    "⚠️ Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
+    throw
+  }
+}

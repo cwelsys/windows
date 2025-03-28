@@ -6,6 +6,17 @@
 		{ "commandName": "bat", "environmentKey": "BAT_CONFIG_PATH", "environmentValue": ".config\\bat\\bat.conf" },
 		{ "commandName": "eza", "environmentKey": "EZA_CONFIG_DIR", "environmentValue": ".config\\eza" },
 		{ "commandName": "komorebic", "environmentKey": "KOMOREBI_CONFIG_HOME", "environmentValue": ".config\\komorebi" },
+		{ "commandName": "wt", "environmentKey": "XDG_DATA_HOME", "environmentValue": "%LOCALAPPDATA%" },
+		{ "commandName": "wt", "environmentKey": "XDG_CONFIG_HOME", "environmentValue": ".config" },
+		{ "commandName": "mise", "environmentKey": "MISE_CONFIG_DIR", "environmentValue": ".config\\mise" },
+		{ "commandName": "jj", "environmentKey": "JJ_CONFIG", "environmentValue": ".config\\jj" },
+		{
+			"commandName": "mise",
+			"environmentKey": "MISE_GLOBAL_CONFIG_FILE",
+			"environmentValue": ".config\\mise\\config.toml"
+		},
+		{ "commandName": "mise", "environmentKey": "CARGO_HOME", "environmentValue": "AppData\\Local\\Rust\\Cargo" },
+		{ "commandName": "mise", "environmentKey": "RUSTUP_HOME", "environmentValue": "AppData\\Local\\Rust\\Rustup" },
 		{
 			"commandName": "yazi",
 			"environmentKey": "YAZI_FILE_ONE",
@@ -25,10 +36,11 @@
 				{ "packageId": "Microsoft.WindowsTerminal" },
 				// { "packageId": "Microsoft.WindowsTerminal.Preview" },
 
-				// Run times
+				// Run
 				{ "packageId": "Microsoft.DotNet.SDK.8" },
 				{ "packageId": "Microsoft.DotNet.SDK.9" },
 				{ "packageId": "Microsoft.DotNet.Runtime.3_1" },
+				{ "packageId": "Python.Python.3.13" },
 				{ "packageId": "AdoptOpenJDK.OpenJDK.11" },
 
 				// Auth
@@ -119,23 +131,16 @@
 
 				// Dev
 				{ "packageName": "bruno" },
-				{ "packageName": "Deno" },
 				{ "packageName": "docker" },
-				{ "packageName": "go" },
 				{ "packageName": "ghostscript" },
 				{ "packageName": "lua" },
 				{ "packageName": "luarocks" },
 				{ "packageName": "make" },
 				{ "packageName": "mariadb" },
-				{ "packageName": "python" },
-				{ "packageName": "rustup" },
 				{ "packageName": "opentofu" },
-				{ "packageName": "task" },
 				{ "packageName": "tree-sitter" },
 				{ "packageName": "just" },
 				{ "packageName": "jj" },
-				{ "packageName": "uv" },
-				{ "packageName": "zig" },
 
 				// Cli
 				{ "packageName": "age" },
@@ -153,6 +158,7 @@
 				{ "packageName": "ffmpeg" },
 				{ "packageName": "fzf" },
 				{ "packageName": "glow" },
+				{ "packageName": "gow" },
 				{ "packageName": "gpg" },
 				{ "packageName": "gzip" },
 				{ "packageName": "gsudo" },
@@ -251,12 +257,12 @@
 				"yusukebe/gh-markdown-preview",
 				"Shresht7/gh-license"
 			],
-			"install": true
+			"install": false
 		}
 	],
 	"powershell": {
 		"psmodule": {
-			"install": true,
+			"install": false,
 			"moduleList": [
 				{ "moduleName": "BurntToast" },
 				{ "moduleName": "CompletionPredictor" },
@@ -279,7 +285,7 @@
 			"additionalArgs": ["-Scope", "CurrentUser", "-Force", "-AllowClobber"]
 		},
 		"psexperimentalfeature": {
-			"enable": true,
+			"enable": false,
 			"featureList": ["PSNativeWindowsTildeExpansion", "PSSubsystemPluginModule", "PSFeedbackProvider"]
 		}
 	}

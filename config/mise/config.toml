@@ -1,0 +1,13 @@
+[tools]
+node = "latest"
+java = "openjdk-21"
+task = "latest"
+bun = "latest"
+"npm:czg" = "latest"
+"npm:git-open" = "latest"
+"npm:git-recent" = "latest"
+"npm:npm-run-all" = "latest"
+
+[settings]
+experimental = true
+quiet = true

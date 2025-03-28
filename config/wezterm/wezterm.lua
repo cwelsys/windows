@@ -62,7 +62,7 @@ config.window_padding = { left = 2, right = 0, top = 3, bottom = 0 }
 
 local font_size
 local primary_font = 'Maple Mono'
-local secondary_font = 'IosevkaTerm Nerd Font'
+local secondary_font = 'FantasqueSansM Nerd Font'
 -- Windows, MacOS and Linux
 if wezterm.target_triple:find 'windows' then
   config.default_prog = { 'pwsh.exe', '-NoLogo' }

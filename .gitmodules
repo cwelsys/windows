@@ -1,3 +1,15 @@
 [submodule "pwsh/config/KomorebiShellExtension"]
 	path = pwsh/config/KomorebiShellExtension
 	url = https://github.com/cwelsys/KomorebiShellExtension
+[submodule "config/clink/clink-completions"]
+	path = config/clink/clink-completions
+	url = https://github.com/vladimir-kotikov/clink-completions
+[submodule "config/clink/clink-gizmos"]
+	path = config/clink/clink-gizmos
+	url = https://github.com/chrisant996/clink-gizmos.git
+[submodule "config/bash/git-bash-completions"]
+	path = config/bash/git-bash-completions
+	url = https://github.com/jacquindev/git-bash-completions.git
+[submodule "pwsh/config/powershell-completions-collection"]
+	path = pwsh/config/powershell-completions-collection
+	url = https://github.com/jacquindev/powershell-completions-collection.git

@@ -354,13 +354,13 @@ $i = 1
 $json = Get-Content "$PSScriptRoot\config.jsonc" -Raw | ConvertFrom-Json
 
 # ~ Winget ~
-Write-TitleBox -Title "🗑️ WinGet Packages"
 $wingetItem = $json.installSource.winget
 $wingetPkgs = $wingetItem.packageList
 $wingetArgs = $wingetItem.additionalArgs
 $wingetInstall = $wingetItem.autoInstall
 
 if ($wingetInstall -eq $True) {
+	Write-TitleBox -Title "🗑️ WinGet Packages"
 	if (!(Get-Command winget -ErrorAction SilentlyContinue)) {
 		# Use external script to install WinGet and all of its requirements
 		# Source: - https://github.com/asheroto/winget-install
@@ -443,7 +443,6 @@ if ($chocoInstall -eq $True) {
 }
 
 # ~ Scoop ~
-Write-TitleBox -Title "🥣 Scoop Packages"
 $scoopItem = $json.installSource.scoop
 $scoopBuckets = $scoopItem.bucketList
 $scoopPkgs = $scoopItem.packageList
@@ -451,6 +450,7 @@ $scoopArgs = $scoopItem.additionalArgs
 $scoopInstall = $scoopItem.autoInstall
 
 if ($scoopInstall -eq $True) {
+	Write-TitleBox -Title "🥣 Scoop Packages"
 	if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
 		# `scoop` is recommended to be installed from a non-administrative
 		# PowerShell terminal. However, since we are in administrative shell,
@@ -510,14 +510,13 @@ if ($scoopInstall -eq $True) {
 }
 
 # ~ Powershell ~
-Write-TitleBox -Title "🐚 PowerShell"
-
-# Install modules if not installed yet
 $moduleItem = $json.powershell.psmodule
 $moduleList = $moduleItem.moduleList
 $moduleArgs = $moduleItem.additionalArgs
 $moduleInstall = $moduleItem.install
+
 if ($moduleInstall -eq $True) {
+	Write-TitleBox -Title "🐚 PowerShell"
 	foreach ($module in $moduleList) {
 		$mName = $module.moduleName
 		$mVersion = $module.moduleVersion  # Add version support if it exists in your JSON
@@ -581,11 +580,18 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 Write-TitleBox -Title "🔗 Symbolic Links"
 $symlinks = @{
 	$PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
+	"$HOME\.czrc"                                                                                 = ".\home\.czrc"
+	"$HOME\.gitconfig"                                                                            = ".\home\.gitconfig"
+	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
+	"$HOME\.inputrc"                                                                              = ".\home\.inputrc"
+	"$HOME\.bashrc"                                                                               = ".\home\.bashrc"
+	"$HOME\.bash_profile"                                                                         = ".\home\.bash_profile"
+	"$HOME\.config\bash"                                                                          = ".\config\bash"
 	"$Env:LOCALAPPDATA\nvim"                                                                      = ".\config\nvim"
-	"$HOME\.gitconfig"                                                                            = ".\.gitconfig"
 	"$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\config\terminal\settings.json"
 	"$HOME\.config\wezterm"                                                                       = ".\config\wezterm"
 	"$HOME\.config\bat"                                                                           = ".\config\bat"
+	"$HOME\.config\startship.toml"                                                                = ".\config\starship.toml"
 	"$Env:LOCALAPPDATA\fastfetch"                                                                 = ".\config\fastfetch"
 	"$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
 	"$HOME\.config\delta"                                                                         = ".\config\delta"
@@ -597,10 +603,11 @@ $symlinks = @{
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
-	"$HOME\app"                                                                                   = "D:\rice\utils\app"
-	"$HOME\Documents\Game"                                                                        = "D:\game"
 	"$HOME\.config\dust"                                                                          = ".\config\dust"
+	"$HOME\.config\mise"                                                                          = ".\config\mise"
+	"$HOME\.config\jj"                                                                            = ".\config\jj"
+	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
+	"$HOME\Documents\Game"                                                                        = "D:\game"
 }
 
 foreach ($symlink in $symlinks.GetEnumerator()) {
@@ -776,6 +783,11 @@ if (Get-Command ya -ErrorAction SilentlyContinue) {
 	ya pack -i >$null 2>&1
 	ya pack -u >$null 2>&1
 }
+
+# UV
+# powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# https://rustup.rs/
 # Install cargo-update & cache
 # if (Get-Command cargo -ErrorAction SilentlyContinue) {
 # 	Write-Verbose "Configuring Cargo"
@@ -842,6 +854,9 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 } else {
 	Write-Warning "Command not found: komorebic."
 }
+
+# steam
+# iwr -useb "https://steambrew.app/install.ps1" | iex
 
 # WSL
 if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {

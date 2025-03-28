@@ -9,7 +9,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 $Env:DOTS = Split-Path (Get-ChildItem $PSScriptRoot | Where-Object FullName -EQ $PROFILE.CurrentUserAllHosts).Target
 $Env:PWSH = Join-Path -Path "$Env:DOTS" -ChildPath "pwsh"
 $Env:_ZO_DATA_DIR = "$Env:DOTS"
-$Env:STARSHIP_CONFIG = "$ENV:PWSH\starship.toml"
+# $Env:STARSHIP_CONFIG = "$PSScriptRoot\config\starship.toml"
 
 # 📝 Editor
 if (Get-Command code -ErrorAction SilentlyContinue) { $Env:EDITOR = "code" }
@@ -25,7 +25,7 @@ Import-Module Catppuccin
 
 # 🐚 Prompt
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-	oh-my-posh init pwsh --config "$Env:PWSH\zen.toml" | Invoke-Expression
+	oh-my-posh init pwsh --config "$Env:PWSH\posher.toml" | Invoke-Expression
 	$Env:POSH_GIT_ENABLED = $true
 }
 
@@ -54,12 +54,17 @@ $PSStyle.Formatting.TableHeader = $Flavor.Rosewater.Foreground()
 $PSStyle.Formatting.Verbose = $Flavor.Yellow.Foreground()
 $PSStyle.Formatting.Warning = $Flavor.Peach.Foreground()
 
-# 🛠️ Includes
+# 🛠️ Include
 foreach ($module in $((Get-ChildItem -Path "$env:PWSH\module\*" -Include *.psm1).FullName )) {
 	Import-Module "$module" -Global
 }
 foreach ($file in $((Get-ChildItem -Path "$env:PWSH\config\*" -Include *.ps1).FullName)) {
 	. "$file"
+}
+
+# 🤔 completion
+if (Test-Path "$env:PWSH\config\powershell-completions-collection\exec.ps1" -PathType Leaf) {
+	. "$env:PWSH\config\powershell-completions-collection\exec.ps1"
 }
 
 # 🦆 yazi
@@ -73,13 +78,14 @@ function y {
 	Remove-Item -Path $tmp
 }
 
-# 🍫 Choco: `refreshenv`
+# 🍫 choco
 # if (Get-Command choco -ErrorAction SilentlyContinue) {
 # 	Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 -Global
 # }
 
-# 🥣 Scoop search
+# 🥣 scoop
 Invoke-Expression (&scoop-search --hook)
+
 
 
 # 💤 zoxide

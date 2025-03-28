@@ -14,17 +14,7 @@
 # Sudo command to be used
 # sudo_command = "sudo"
 
-disable = [
-	"rustup",
-	"bun",
-	"containers",
-	"mas",
-	"vim",
-	"chocolatey",
-	"winget",
-	"microsoft_store",
-	"yarn",
-]
+disable = ["containers", "vim", "microsoft_store", "yarn"]
 # Disable specific steps - same options as the command line flag
 
 # Ignore failures for these steps
@@ -97,10 +87,10 @@ skip_notify = true
 
 # Custom commands
 [commands]
+"komorebi" = "powershell.exe -NoProfile -Command \"komorebic fetch-asc\""
+
 # "Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 # "Custom command using interactive shell (unix)" = "-i vim_upgrade"
-
-
 [python]
 # enable_pip_review = true                         ###disabled by default
 # enable_pip_review_local = true                   ###disabled by default
