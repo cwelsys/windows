@@ -28,11 +28,11 @@ alt + shift + k         : komorebic move up
 alt + shift + l         : komorebic move right
 alt + shift + return    : komorebic promote
 
-# Capslock rebound to f13
-f13 + a        							: komorebic move left
-f13 + s      								: komorebic move down
-f13 + w         						: komorebic move up
-f13 + d      								: komorebic move right
+# Gamer style
+f13 + a 								: komorebic move left
+f13 + s 								: komorebic move down
+f13 + w 								: komorebic move up
+f13 + d 								: komorebic move right
 
 # Stack windows
 alt + left              : komorebic stack left
@@ -41,7 +41,7 @@ alt + up                : komorebic stack up
 alt + right             : komorebic stack right
 alt + oem_1             : komorebic unstack # oem_1 is ;
 alt + oem_4             : komorebic cycle-stack previous # oem_4 is [
-alt + oem_6             : komorebic cycle-stack next # oem_6 is ]
+alt + oem_6             : komorebic cycle-stack next # oem_6 is ]dadadaddad
 
 # Resize
 alt + oem_plus          : komorebic resize-axis horizontal increase
@@ -53,16 +53,13 @@ alt + shift + oem_minus : komorebic resize-axis vertical decrease
 alt + t                 : komorebic toggle-float
 alt + shift + f         : komorebic toggle-monocle
 
-# Options
+# Window manager options
 alt + shift + r         : komorebic retile
 alt + p                 : komorebic toggle-pause
 
 # Layouts
 alt + x                 : komorebic flip-layout horizontal
 alt + y                 : komorebic flip-layout vertical
-
-# Layers
-# alt + shift + oem_1					: komorebic toggle-workspace-layer # oem_1 is ;
 
 # Workspaces
 alt + 1                 : komorebic focus-workspace 0
@@ -73,7 +70,6 @@ alt + 5                 : komorebic focus-workspace 4
 alt + 6                 : komorebic focus-workspace 5
 alt + 7                 : komorebic focus-workspace 6
 alt + 8                 : komorebic focus-workspace 7
-alt + shift + q					: komorebic close-workspace
 
 # Move windows across workspaces
 alt + shift + 1         : komorebic move-to-workspace 0

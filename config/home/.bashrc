@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1090
 
-DOTFILES="$(dirname "$(dirname "$(readlink "$HOME/.bashrc")")")"
+DOTFILES="$(dirname "$(dirname "$(dirname "$(readlink "$HOME/.bashrc")")")")"
 export DOTFILES
 
 # Source bash configuration files
@@ -43,6 +43,5 @@ fi
 if command -v fastfetch >/dev/null 2>&1; then
 	fastfetch
 fi
-
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

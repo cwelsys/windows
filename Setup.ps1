@@ -1,8 +1,34 @@
-﻿#          _.-;;-._
-#   '-..-'|   ||   |
-#   '-..-'|_.-;;-._|
-#   '-..-'|   ||   |
-#   '-..-'|_.-''-._|
+﻿<#PSScriptInfo
+
+.VERSION 1.0.4
+
+.GUID 7953dd1e-d2a8-4714-8e13-38ddf45fe9f1
+
+.AUTHOR cwel@cwel.sh
+
+.COMPANYNAME
+
+.COPYRIGHT 2025 Connor Welsh. All rights reserved.
+
+.TAGS windows dotfiles powershell
+
+.LICENSEURI https://github.com/cwelsys/windows/blob/main/LICENSE
+
+.PROJECTURI https://github.com/cwelsys/windows
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+
+.PRIVATEDATA
+
+#>
 
 #Requires -Version 7
 #Requires -RunAsAdministrator
@@ -15,7 +41,11 @@
 #>
 Param()
 
-# Helper functions
+$VerbosePreference = "SilentlyContinue"
+
+##########################################################################
+###												  	HELPER FUNCTIONS												 ###
+##########################################################################
 
 function Write-TitleBox {
 	param ([string]$Title, [string]$BorderChar = "*", [int]$Padding = 10)
@@ -298,15 +328,34 @@ function Write-LockFile {
 	}
 }
 
-# Main Script
-# Check internet connection
+function New-SymbolicLinks {
+	param (
+		[string]$Source,
+		[string]$Destination,
+		[switch]$Recurse
+	)
+
+	Get-ChildItem $Source -Recurse:$Recurse | Where-Object { !$_.PSIsContainer } | ForEach-Object {
+		$destinationPath = $_.FullName -replace [regex]::Escape($Source), $Destination
+		if (!(Test-Path (Split-Path $destinationPath))) {
+			New-Item (Split-Path $destinationPath) -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+		}
+		New-Item -ItemType SymbolicLink -Path $destinationPath -Target $($_.FullName) -Force -ErrorAction SilentlyContinue | Out-Null
+		Write-ColorText "{Blue}[symlink] {Green}$($_.FullName) {Yellow}--> {Gray}$destinationPath"
+	}
+}
+
+########################################################################
+###														MAIN SCRIPT 		  					 			 		 ###
+########################################################################
+# check network connectivity
 $internetConnection = Test-NetConnection google.com -CommonTCPPort HTTP -InformationLevel Detailed -WarningAction SilentlyContinue
 $internetAvailable = $internetConnection.TcpTestSucceeded
 if ($internetAvailable -eq $False) {
 	Write-Warning "NO INTERNET CONNECTION AVAILABLE!"
 	Write-Host "Please check your internet connection and re-run this script.`n"
 	for ($countdown = 3; $countdown -ge 0; $countdown--) {
-		Write-ColorText "`r{DarkGray}Automatically exit this script in {Blue}$countdown second(s){DarkGray}..." -NoNewLine
+		Write-ColorText "`r{DarkGray}Automatically exiting in {Blue}$countdown second(s){DarkGray}..." -NoNewLine
 		Start-Sleep -Seconds 1
 	}
 	exit
@@ -314,10 +363,10 @@ if ($internetAvailable -eq $False) {
 
 Write-Progress -Completed; Clear-Host
 
-Write-ColorText "`n✅ {Green}Internet Connection available.`n`n{DarkGray}Start running setup process..."
+Write-ColorText "`n✅ {Green}Connected.`n`n{DarkGray}Starting setup..."
 Start-Sleep -Seconds 3
 
-# set current working directory location
+# set current working directory
 $currentLocation = "$($(Get-Location).Path)"
 
 Set-Location $PSScriptRoot
@@ -325,11 +374,13 @@ Set-Location $PSScriptRoot
 
 $i = 1
 
-# Install fonts
+######################################################################
+###													NERD FONTS														 ###
+######################################################################
 
 # Write-TitleBox -Title "Nerd Fonts Installation"
 # Set-Clipboard "16, 29, 10, 28, 46, 44, 52"
-# Write-ColorText "{Green}Copied some fonts to the clipboard:`n{DarkGray}(Please skip this step if you already installed Nerd Fonts)`n`n  {Gray}● Caskaydiacove`n  ● FantasqueSansM`n  ● IosvekaTerm`n  ● JetBrainsMono`n"
+# Write-ColorText "{Green}Copied font codes clipboard:`n{DarkGray}(Please skip this step if you already installed Nerd Fonts)`n`n  {Gray}● Caskaydiacove`n  ● FantasqueSansM`n  ● IosvekaTerm`n  ● JetBrainsMono`n"
 
 # for ($count = 5; $count -ge 0; $count--) {
 # 	Write-ColorText "`r{Magenta}Install Nerd Fonts now? [y/N]: {DarkGray}(Exit in {Blue}$count {DarkGray}seconds) {Gray}" -NoNewLine
@@ -350,6 +401,9 @@ $i = 1
 
 # Clear-Host
 
+########################################################################
+###													PACKAGES 			 									 				 ###
+########################################################################
 # Parse the json
 $json = Get-Content "$PSScriptRoot\config.jsonc" -Raw | ConvertFrom-Json
 
@@ -412,13 +466,13 @@ if ($wingetInstall -eq $True) {
 }
 
 # ~ Choco ~
-# Write-TitleBox -Title "🍫 Chocolatey Packages"
 $chocoItem = $json.installSource.choco
 $chocoPkgs = $chocoItem.packageList
 $chocoArgs = $chocoItem.additionalArgs
 $chocoInstall = $chocoItem.autoInstall
 
 if ($chocoInstall -eq $True) {
+	Write-TitleBox -Title "🍫 Chocolatey Packages"
 	if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
 		# Install chocolatey
 		# Source: - https://chocolatey.org/install
@@ -552,70 +606,41 @@ if ($featureEnable -eq $True) {
 	Refresh ($i++)
 }
 
-# Git config
-Write-TitleBox -Title "📝 Git config"
-if (Get-Command git -ErrorAction SilentlyContinue) {
-	$gitUserName = (git config user.name)
-	$gitUserMail = (git config user.email)
+######################################################################
+###														GIT SETUP											    	 ###
+######################################################################
 
-	if ($null -eq $gitUserName) {
-		$gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host)
-	} else {
-		Write-ColorText "{Blue}[user.name]  {Magenta}git: {Yellow}(already set) {Gray}$gitUserName"
-	}
-	if ($null -eq $gitUserMail) {
-		$gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host)
-	} else {
-		Write-ColorText "{Blue}[user.email] {Magenta}git: {Yellow}(already set) {Gray}$gitUserMail"
-	}
+# Write-TitleBox -Title "📝 Git config"
+# if (Get-Command git -ErrorAction SilentlyContinue) {
+# 	$gitUserName = (git config user.name)
+# 	$gitUserMail = (git config user.email)
 
-	git submodule update --init --recursive
-}
+# 	if ($null -eq $gitUserName) {
+# 		$gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host)
+# 	} else {
+# 		Write-ColorText "{Blue}[user.name]  {Magenta}git: {Yellow}(already set) {Gray}$gitUserName"
+# 	}
+# 	if ($null -eq $gitUserMail) {
+# 		$gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host)
+# 	} else {
+# 		Write-ColorText "{Blue}[user.email] {Magenta}git: {Yellow}(already set) {Gray}$gitUserMail"
+# 	}
 
-if (Get-Command gh -ErrorAction SilentlyContinue) {
-	if (!(gh auth status)) { gh auth login }
-}
+# 	git submodule update --init --recursive
+# }
 
-# ~symlinks~
-Write-TitleBox -Title "🔗 Symbolic Links"
-$symlinks = @{
-	$PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
-	"$HOME\.czrc"                                                                                 = ".\home\.czrc"
-	"$HOME\.gitconfig"                                                                            = ".\home\.gitconfig"
-	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
-	"$HOME\.inputrc"                                                                              = ".\home\.inputrc"
-	"$HOME\.bashrc"                                                                               = ".\home\.bashrc"
-	"$HOME\.bash_profile"                                                                         = ".\home\.bash_profile"
-	"$HOME\.config\bash"                                                                          = ".\config\bash"
-	"$Env:LOCALAPPDATA\nvim"                                                                      = ".\config\nvim"
-	"$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\config\terminal\settings.json"
-	"$HOME\.config\wezterm"                                                                       = ".\config\wezterm"
-	"$HOME\.config\bat"                                                                           = ".\config\bat"
-	"$HOME\.config\startship.toml"                                                                = ".\config\starship.toml"
-	"$Env:LOCALAPPDATA\fastfetch"                                                                 = ".\config\fastfetch"
-	"$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
-	"$HOME\.config\delta"                                                                         = ".\config\delta"
-	"$HOME\.config\eza"                                                                           = ".\config\eza"
-	"$Env:LOCALAPPDATA\glow"                                                                      = ".\config\glow"
-	"$Env:APPDATA\topgrade.toml"                                                                  = ".\config\topgrade.toml"
-	"$HOME\.config\gh-dash"                                                                       = ".\config\gh-dash"
-	"$HOME\.config\komorebi"                                                                      = ".\config\komorebi"
-	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
-	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
-	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\.config\dust"                                                                          = ".\config\dust"
-	"$HOME\.config\mise"                                                                          = ".\config\mise"
-	"$HOME\.config\jj"                                                                            = ".\config\jj"
-	"$HOME\Documents\Script"                                                                      = "D:\rice\utils\script"
-	"$HOME\Documents\Game"                                                                        = "D:\game"
-}
+# if (Get-Command gh -ErrorAction SilentlyContinue) {
+# 	if (!(gh auth status)) { gh auth login }
+# }
 
-foreach ($symlink in $symlinks.GetEnumerator()) {
-	Write-Verbose -Message "Creating symlink for $(Resolve-Path $symlink.Value) --> $($symlink.Key)"
-	Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-	New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
-	Write-ColorText "{Blue}[symlink] {Green}$(Resolve-Path $symlink.Value) {Yellow}--> {Gray}$($symlink.Key)"
-}
+####################################################################
+###															SYMLINKS 												 ###
+####################################################################
+# symlinks
+Write-TitleBox -Title "🔗 Symlinks"
+New-SymbolicLinks -Source "$PSScriptRoot\config\home" -Destination "$env:USERPROFILE" -Recurse
+New-SymbolicLinks -Source "$PSScriptRoot\config\AppData" -Destination "$env:USERPROFILE\AppData" -Recurse
+New-SymbolicLinks -Source "$PSScriptRoot\config\config" -Destination "$env:USERPROFILE\.config" -Recurse
 Refresh ($i++)
 
 # Set the right git name and email for the user after symlinking
@@ -624,7 +649,9 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 	git config --global user.email $gitUserMail
 }
 
-# ~ Environment variables ~s
+##########################################################################
+###													ENVIRONMENT VARIABLES											 ###
+##########################################################################
 Write-TitleBox -Title "🌏 Environment Variables"
 $envVars = $json.environmentVariable
 foreach ($env in $envVars) {
@@ -632,37 +659,27 @@ foreach ($env in $envVars) {
 	$envKey = $env.environmentKey
 	$envValue = $env.environmentValue
 	if (Get-Command $envCommand -ErrorAction SilentlyContinue) {
-		# Process environment value - expand relative paths if needed
 		$isRelativePath = $envValue.StartsWith('.') -or
             ($envValue -match '^[^:]+[\\/]' -and -not $envValue.Contains(':'))
 
 		if ($isRelativePath) {
-			# Make sure we're using consistent path format (.config vs config)
 			if ($envValue -match '^\.?config\\') {
 				$envValue = $envValue -replace '^config\\', '.config\'
 				$envValue = $envValue -replace '^\.config\\', '.config\'
 			}
-
-			# This is a relative path - expand relative to $HOME
 			$expandedValue = Join-Path -Path $HOME -ChildPath $envValue
 			$envValue = $expandedValue
 		}
-
-		# Check if the environment variable already exists and has the correct value
 		$existingValue = [System.Environment]::GetEnvironmentVariable($envKey, "User")
 		$shouldUpdate = $true
-
-		# Compare values (case-insensitive for paths on Windows)
 		if (![string]::IsNullOrEmpty($existingValue)) {
 			if ($isRelativePath) {
-				# For paths, compare normalized paths
 				$normalizedExisting = [System.IO.Path]::GetFullPath($existingValue)
 				$normalizedNew = [System.IO.Path]::GetFullPath($envValue)
 				if ($normalizedExisting -eq $normalizedNew) {
 					$shouldUpdate = $false
 				}
 			} elseif ($existingValue -eq $envValue) {
-				# For non-paths, exact match is required
 				$shouldUpdate = $false
 			}
 		}
@@ -682,7 +699,6 @@ foreach ($env in $envVars) {
 		Write-ColorText "{Blue}[environment] {Red}(skipped) {Magenta}$envKey {Yellow}--> {Gray}Command '$envCommand' not found"
 	}
 }
-
 # Handle gh-dash special case
 if (Get-Command gh -ErrorAction SilentlyContinue) {
 	$ghDashAvailable = (& gh.exe extension list | Select-String -Pattern "dlvhdr / gh-dash" -SimpleMatch -CaseSensitive)
@@ -703,7 +719,9 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 }
 Refresh ($i++)
 
-# plugins / extensions / addons
+########################################################################
+###														ADDONS / PLUGINS											 ###
+########################################################################
 $myAddons = $json.packageAddon
 foreach ($a in $myAddons) {
 	$aCommandName = $a.commandName
@@ -728,12 +746,32 @@ foreach ($a in $myAddons) {
 }
 Refresh ($i++)
 
-# Themes
+# VSCode Extensions
+# if (Get-Command code -ErrorAction SilentlyContinue) {
+# 	Write-TitleBox -Title "VSCode Extensions Installation"
+# 	$extensionList = Get-Content "$PSScriptRoot\config\vscode\extensions.list"
+# 	foreach ($ext in $extensionList) {
+# 		if (!(code --list-extensions | Select-String "$ext")) {
+# 			Write-Verbose -Message "Installing VSCode Extension: $ext"
+# 			Invoke-Expression "code --install-extension $ext >`$null 2>&1"
+# 			if ($LASTEXITCODE -eq 0) {
+# 				Write-ColorText "{Blue}[extension] {Green}(success) {Gray}$ext"
+# 			} else {
+# 				Write-ColorText "{Blue}[extension] {Red}(failed) {Gray}$ext"
+# 			}
+# 		} else {
+# 			Write-ColorText "{Blue}[extension] {Yellow}(exists) {Gray}$ext"
+# 		}
+# 	}
+# }
 
-Write-TitleBox -Title "😎 Per Application Theme Installation"
+##########################################################################
+###													THEMES 								 				 						###
+##########################################################################
+Write-TitleBox -Title "😎 Themes"
 $catppuccinThemes = @('Mocha')
 
-# FLowlauncher
+# flowlauncher
 $flowLauncherDir = "$env:APPDATA\FlowLauncher"
 if (Test-Path "$flowLauncherDir" -PathType Container) {
 	$flowLauncherThemeDir = Join-Path "$flowLauncherDir" -ChildPath "Themes"
@@ -753,8 +791,7 @@ if (Test-Path "$flowLauncherDir" -PathType Container) {
 
 $catppuccinThemes = $catppuccinThemes.ToLower()
 
-# add btop theme
-# since we install btop by scoop, then the application folder would be in scoop directory
+# btop
 $btopExists = Get-Command btop -ErrorAction SilentlyContinue
 if ($btopExists) {
 	if ($btopExists.Source | Select-String -SimpleMatch -CaseSensitive "scoop") {
@@ -776,16 +813,30 @@ if ($btopExists) {
 	}
 }
 
-# yazi plugins
+######################################################################
+###														MISCELLANEOUS		 										 ###
+######################################################################
 Write-TitleBox "🦀 Miscellaneous"
+
+# yazi
 if (Get-Command ya -ErrorAction SilentlyContinue) {
 	Write-Verbose "Installing yazi plugins / themes"
 	ya pack -i >$null 2>&1
 	ya pack -u >$null 2>&1
 }
 
+# bat
+if (Get-Command bat -ErrorAction SilentlyContinue) {
+	Write-Verbose "Building bat theme"
+	bat cache --clear
+	bat cache --build
+}
+
 # UV
 # powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# steam
+# iwr -useb "https://steambrew.app/install.ps1" | iex
 
 # https://rustup.rs/
 # Install cargo-update & cache
@@ -795,27 +846,20 @@ if (Get-Command ya -ErrorAction SilentlyContinue) {
 # 	cargo install cargo-cache
 # }
 
-# bat build theme
-if (Get-Command bat -ErrorAction SilentlyContinue) {
-	Write-Verbose "Building bat theme"
-	bat cache --clear
-	bat cache --build
-}
-
-Write-TitleBox "👾 Komorebi & Yasb Engines"
+Write-TitleBox "👾 Komorebi & Yasb"
 
 # yasb
 if (Get-Command yasbc -ErrorAction SilentlyContinue) {
-	if (!(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } )) {
-		try { & yasbc.exe enable-autostart --task } catch { Write-Error "$_" }
-	} else {
-		$yasbTaskName = Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } | Select-Object -ExpandProperty TaskName
-		Write-Host "✅ Task: $yasbTaskName already created."
-	}
+	# if (!(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } )) {
+	# 	try { & yasbc.exe enable-autostart --task } catch { Write-Error "$_" }
+	# } else {
+	# 	$yasbTaskName = Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } | Select-Object -ExpandProperty TaskName
+	# 	Write-Host "✅ Task: $yasbTaskName already created."
+	# }
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
 		try { & yasbc.exe start } catch { Write-Error "$_" }
 	} else {
-		Write-Host "✅ YASB Status Bar is already running."
+		Write-Host "✅ YASB is already running."
 	}
 } else {
 	Write-Warning "Command not found: yasbc."
@@ -823,7 +867,6 @@ if (Get-Command yasbc -ErrorAction SilentlyContinue) {
 
 # komorebi
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
-	komorebic fetch-asc
 	# Registry: Long path support for komorebi
 	# - https://lgug2z.github.io/komorebi/installation.html#installation
 
@@ -837,26 +880,23 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
 		$whkdExists = Get-Command whkd -ErrorAction SilentlyContinue
 		$whkdProcess = Get-Process -Name whkd -ErrorAction SilentlyContinue
-		if ($whkdExists -and (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\komorebi.lnk"))) {
-			try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait }
-			catch { Write-Error "$_" }
-		} else {
-			Write-Host "✅ Shortcut: komorebi.lnk created in shell:Startup."
-		}
-		Write-Host "Starting Komorebi in the background..."
+		# if ($whkdExists -and (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\komorebi.lnk"))) {
+		# 	try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait }
+		# 	catch { Write-Error "$_" }
+		# } else {
+		# 	Write-Host "✅ Shortcut: komorebi.lnk created in shell:Startup."
+		# }
+		Write-Host "Starting Komorebi..."
 		if ($whkdExists -and (!$whkdProcess)) {
 			try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "start", "--whkd" -WindowStyle Hidden }
 			catch { Write-Error "$_" }
 		}
 	} else {
-		Write-Host "✅ Komorebi Tiling Window Management is already running."
+		Write-Host "✅ Komorebi is already running."
 	}
 } else {
 	Write-Warning "Command not found: komorebic."
 }
-
-# steam
-# iwr -useb "https://steambrew.app/install.ps1" | iex
 
 # WSL
 if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
@@ -864,7 +904,6 @@ if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
 	Start-Process -FilePath "PowerShell" -ArgumentList "wsl", "--install" -Verb RunAs -Wait -WindowStyle Hidden
 }
 
-# End
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
 

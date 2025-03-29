@@ -62,11 +62,6 @@ foreach ($file in $((Get-ChildItem -Path "$env:PWSH\config\*" -Include *.ps1).Fu
 	. "$file"
 }
 
-# 🤔 completion
-if (Test-Path "$env:PWSH\config\powershell-completions-collection\exec.ps1" -PathType Leaf) {
-	. "$env:PWSH\config\powershell-completions-collection\exec.ps1"
-}
-
 # 🦆 yazi
 function y {
 	$tmp = [System.IO.Path]::GetTempFileName()
@@ -86,7 +81,10 @@ function y {
 # 🥣 scoop
 Invoke-Expression (&scoop-search --hook)
 
-
+# git aliases
+if (Get-Module -ListAvailable -Name git-aliases -ErrorAction SilentlyContinue) {
+	Import-Module git-aliases -Global -DisableNameChecking
+}
 
 # 💤 zoxide
 Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })

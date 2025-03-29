@@ -11,14 +11,16 @@ db.zo
 *.backup
 .env
 .ignore
+.out/*
 .idea/
 .vscode/
 .vagrant/
 pwsh/fortune.txt
-config/lazygit/state.yml
+config/AppData/Local/lazygit/state.yml
 node_modules
 nvim/lazy-lock.json
 .ignore/
 .scripts/
 .stylua.toml
 !*/.gitkeep
+!.gitkeep

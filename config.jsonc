@@ -2,19 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/cwelsys/windows/refs/heads/main/schema.json",
 	// Environment Variables
 	"environmentVariable": [
-		{ "commandName": "bat", "environmentKey": "BAT_CONFIG_DIR", "environmentValue": ".config\\bat" },
-		{ "commandName": "bat", "environmentKey": "BAT_CONFIG_PATH", "environmentValue": ".config\\bat\\bat.conf" },
+		// { "commandName": "bat", "environmentKey": "BAT_CONFIG_DIR", "environmentValue": ".config\\bat" },
+		// { "commandName": "bat", "environmentKey": "BAT_CONFIG_PATH", "environmentValue": ".config\\bat\\bat.conf" },
 		{ "commandName": "eza", "environmentKey": "EZA_CONFIG_DIR", "environmentValue": ".config\\eza" },
 		{ "commandName": "komorebic", "environmentKey": "KOMOREBI_CONFIG_HOME", "environmentValue": ".config\\komorebi" },
 		{ "commandName": "wt", "environmentKey": "XDG_DATA_HOME", "environmentValue": "%LOCALAPPDATA%" },
 		{ "commandName": "wt", "environmentKey": "XDG_CONFIG_HOME", "environmentValue": ".config" },
-		{ "commandName": "mise", "environmentKey": "MISE_CONFIG_DIR", "environmentValue": ".config\\mise" },
+		// { "commandName": "mise", "environmentKey": "MISE_CONFIG_DIR", "environmentValue": ".config\\mise" },
 		{ "commandName": "jj", "environmentKey": "JJ_CONFIG", "environmentValue": ".config\\jj" },
-		{
-			"commandName": "mise",
-			"environmentKey": "MISE_GLOBAL_CONFIG_FILE",
-			"environmentValue": ".config\\mise\\config.toml"
-		},
 		{ "commandName": "mise", "environmentKey": "CARGO_HOME", "environmentValue": "AppData\\Local\\Rust\\Cargo" },
 		{ "commandName": "mise", "environmentKey": "RUSTUP_HOME", "environmentValue": "AppData\\Local\\Rust\\Rustup" },
 		{
@@ -134,9 +129,11 @@
 				{ "packageName": "docker" },
 				{ "packageName": "ghostscript" },
 				{ "packageName": "lua" },
+				{ "packageName": "nodejs" },
 				{ "packageName": "luarocks" },
 				{ "packageName": "make" },
 				{ "packageName": "mariadb" },
+				{ "packageName": "task" },
 				{ "packageName": "opentofu" },
 				{ "packageName": "tree-sitter" },
 				{ "packageName": "just" },
