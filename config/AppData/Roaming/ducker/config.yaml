@@ -1,0 +1,15 @@
+prompt: 🦆
+default_exec: /bin/bash
+docker_path: npipe:////./pipe/docker_engine
+docker_host: null
+check_for_update: true
+theme:
+  use_theme: true
+  title: '#fab387'
+  help: '#cdd6f4'
+  background: '#1e1e2e'
+  footer: '#cdd6f4'
+  success: '#a6e3a1'
+  error: '#f38ba8'
+  positive_highlight: '#74c7ec'
+  negative_highlight: '#cba6f7'

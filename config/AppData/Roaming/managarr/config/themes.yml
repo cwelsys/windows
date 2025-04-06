@@ -1,0 +1,185 @@
+- name: default
+  theme:
+    background:
+      color: '#233237'
+      enabled: true
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: White
+    downloaded:
+      color: Green
+    downloading:
+      color: Magenta
+    failure:
+      color: Red
+    help:
+      color: LightBlue
+    missing:
+      color: Red
+    primary:
+      color: Cyan
+    secondary:
+      color: Yellow
+    success:
+      color: Green
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: Yellow
+    unreleased:
+      color: LightCyan
+    warning:
+      color: Magenta
+- name: watermelon-dark
+  theme:
+    background:
+      color: '#233237'
+      enabled: false
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: '#00FF00'
+    downloaded:
+      color: '#80FFBF'
+    downloading:
+      color: Magenta
+    failure:
+      color: '#FF8080'
+    help:
+      color: LightBlue
+    missing:
+      color: '#FF8080'
+    primary:
+      color: '#FF19D9'
+    secondary:
+      color: '#8C19FF'
+    success:
+      color: Green
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: Yellow
+    unreleased:
+      color: LightCyan
+    warning:
+      color: Magenta
+- name: dracula
+  theme:
+    background:
+      color: '#232326'
+      enabled: true
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: '#F8F8F2'
+    downloaded:
+      color: '#50FA7B'
+    downloading:
+      color: '#F1FA8C'
+    failure:
+      color: '#FF5555'
+    help:
+      color: '#6272A4'
+    missing:
+      color: '#FFB86C'
+    primary:
+      color: '#FF79C6'
+    secondary:
+      color: '#FF79C6'
+    success:
+      color: '#50FA7B'
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: '#6272A4'
+    unreleased:
+      color: '#F8F8F2'
+    warning:
+      color: '#F1FA8C'
+- name: eldritch
+  theme:
+    background:
+      color: '#212337'
+      enabled: true
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: '#EBFAFA'
+    downloaded:
+      color: '#37F499'
+    downloading:
+      color: '#F7C67F'
+    failure:
+      color: '#F16C75'
+    help:
+      color: '#7081D0'
+    missing:
+      color: '#F7C67F'
+    primary:
+      color: '#F265B5'
+    secondary:
+      color: '#04D1F9'
+    success:
+      color: '#37F499'
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: '#7081D0'
+    unreleased:
+      color: '#EBFAFA'
+    warning:
+      color: '#F1FC79'
+- name: catppuccin-mocha
+  theme:
+    background:
+      color: '#1E1E2E'
+      enabled: true
+    awaiting_import:
+      color: '#F9E2AF'
+    indeterminate:
+      color: '#F9E2AF'
+    default:
+      color: '#CDD6F4'
+    downloaded:
+      color: '#A6E3A1'
+    downloading:
+      color: '#F5C2E7'
+    failure:
+      color: '#F38BA8'
+    help:
+      color: '#89B4FA'
+    missing:
+      color: '#F38BA8'
+    primary:
+      color: '#CBA6F7'
+    secondary:
+      color: '#94E2D5'
+    success:
+      color: '#A6E3A1'
+    system_function:
+      color: '#F9E2AF'
+    unmonitored:
+      color: '#7F849C'
+    unmonitored_missing:
+      color: '#B4BEFE'
+    unreleased:
+      color: '#CDD6F4'
+    warning:
+      color: '#F9E2AF'

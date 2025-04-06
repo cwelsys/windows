@@ -272,7 +272,7 @@
 
 /* WIFI WIDGET */
 .wifi-widget {
-	padding: 0 4px 0 2px;
+	padding: 0 4px 0 4px;
 	border-top-left-radius: 15px;
 	border-bottom-left-radius: 15px;
 }
@@ -285,8 +285,8 @@
 /* GITHUB WIDGET */
 .github-widget {
 	padding: 0 4px;
-	border-top-left-radius: 15px;
-	border-bottom-left-radius: 15px;
+	border-top-left-radius: 18px;
+	border-bottom-left-radius: 18px;
 }
 .github-widget .icon {
 	font-size: 18px;

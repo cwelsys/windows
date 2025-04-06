@@ -28,7 +28,7 @@ bars:
       windows_app_bar: true
     dimensions:
       width: '100%'
-      height: 32
+      height: 35
     padding:
       top: 5
       left: 15
@@ -41,8 +41,8 @@ bars:
           'media',
           'notifications',
           # 'update_check',
-          # 'github',
           'wifi',
+          'github',
           'cpu',
           'memory',
           'weather',
@@ -114,9 +114,9 @@ widgets:
       label_icon: true
       label_icon_size: 16
       #TODO: add callbacks
-      # max_length: 56
+      max_length: 56
       max_length_ellipsis: '...'
-      # monitor_exclusive: true
+      monitor_exclusive: true
 
   clock:
     type: 'yasb.clock.ClockWidget'
@@ -218,7 +218,7 @@ widgets:
     type: 'yasb.wallpapers.WallpapersWidget'
     options:
       label: "<span>\udb83\ude09</span>"
-    image_path: "G:\\dotfiles\\windows\\walls\\pics" # Example path to folder with images
+    image_path: "C:\\users\\cwel\\Pictures\\walls" # Example path to folder with images
     change_automatically: false # Automatically change wallpaper
     update_interval: 60 # If change_automatically is true, update interval in seconds
     gallery:
@@ -288,7 +288,7 @@ widgets:
       update_interval: 600 # Update interval in seconds, Min 600 seconds
       hide_decimal: true
       units: 'imperial'
-      location: '22101' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
+      location: 'Arlington 22201' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
       callbacks:
         on_left: 'toggle_label'
       icons:
@@ -357,15 +357,14 @@ widgets:
           "\udb82\udd28", # Icon for 81-100% strength
         ]
 
-  update_check:
+  update:
     type: 'yasb.update_check.UpdateCheckWidget'
     options:
       winget_update:
         enabled: true
         label: "<span>\uf0ab</span> {count}"
-        tooltip: true
         interval: 180
-        exclude: [Discord.Discord]
+        exclude: [Discord]
       windows_update:
         enabled: false
         label: "<span>\uf0ab</span> {count}"

@@ -1,19 +1,93 @@
-# Enable/disable features
 features:
   packages: false
-  winget: true
-  scoop: true
-  chocolatey: false
   powershell: false
   environment: false
   symlinks: true
   themes: true
   addons: false
-  misc: true
+  misc: false
 
-# Package management configuration
+  #pm overrides
+  winget: true
+  scoop: true
+  chocolatey: false
+
+# Environment variables
+environment:
+  - command: eza
+    key: EZA_CONFIG_DIR
+    value: .config\eza
+  - command: komorebic
+    key: KOMOREBI_CONFIG_HOME
+    value: .config\komorebi
+  - command: jj
+    key: JJ_CONFIG
+    value: .config\jj
+  - command: mise
+    key: CARGO_HOME
+    value: AppData\Local\Rust\Cargo
+  - command: mise
+    key: RUSTUP_HOME
+    value: AppData\Local\Rust\Rustup
+  - command: yazi
+    key: YAZI_FILE_ONE
+    value: "C:\\Program Files\\Git\\usr\\bin\\file.exe"
+  - command: yazi
+    key: YAZI_CONFIG_HOME
+    value: .config\yazi
+  - command: vagrant
+    key: VAGRANT_DEFAULT_PROVIDER
+    value: virtualbox
+
+# Symlinks
+symlinks:
+  # Directories to create symlinks for
+  # Each directory contains files that will be symlinked to the destination
+  directories:
+    - source: config/home
+      destination: '%USERPROFILE%'
+    - source: config/config
+      destination: '%USERPROFILE%/.config'
+    - source: config/AppData
+      destination: '%USERPROFILE%/AppData'
+
+  # Overrides specify paths that should be forced to symlink even if the target exists
+  # This is useful for files that may already exist but you want to replace with your config
+  # Options:
+  # - Exact path: "d:/dots/config/file.txt" (will match only this exact file)
+  # - Directory path: "d:/dots/config/dir" (will match all files in this directory)
+  # - Wildcard path: "d:/dots/config/*.json" (will match all json files in this directory)
+  # - Recursive wildcard: "d:/dots/config/**/*.json" (will match all json files in all subdirectories)
+  overrides:
+    # Forces Windows Terminal settings to be replaced even if the file already exists
+    - config/appdata/local/packages/microsoft.windowsterminal_8wekyb3d8bbwe/localstate/settings.json
+
+addons:
+  - command: gh
+    command_check: gh extension list
+    command_invoke: gh extension install
+    install: false
+    packages:
+      - dlvhdr/gh-dash
+      - yuler/gh-download
+      - seachicken/gh-poi
+      - Link-/gh-token
+      - yusukebe/gh-markdown-preview
+      - Shresht7/gh-license
+
+# Miscellaneous configurations
+misc:
+  wsl_install: true
+
+  komorebi:
+    # enable: true
+    # enable_autostart: true
+
+  yasb:
+    # enable: true
+    # enable_autostart: true
+
 packages:
-  # WinGet configuration
   winget:
     additional_args:
       - --exact
@@ -37,6 +111,7 @@ packages:
       # Auth
       - id: Tailscale.Tailscale
       - id: Bitwarden.Bitwarden
+      - id: Proton.ProtonVPN
 
       # Editors
       - id: Microsoft.VisualStudioCode
@@ -79,7 +154,6 @@ packages:
       - id: Spotify.Spotify
       - id: RARLab.WinRAR
 
-  # Scoop configuration
   scoop:
     additional_args: []
     buckets:
@@ -230,9 +304,7 @@ packages:
       - name: audacity
       - name: systeminformer-nightly
       - name: upx
-      - name: vlc
 
-  # Chocolatey configuration
   chocolatey:
     additional_args:
       - -y
@@ -240,40 +312,11 @@ packages:
     packages:
       - name: choco-cleaner
 
-# Environment variables
-environment:
-  - command: eza
-    key: EZA_CONFIG_DIR
-    value: .config\eza
-  - command: komorebic
-    key: KOMOREBI_CONFIG_HOME
-    value: .config\komorebi
-  - command: jj
-    key: JJ_CONFIG
-    value: .config\jj
-  - command: mise
-    key: CARGO_HOME
-    value: AppData\Local\Rust\Cargo
-  - command: mise
-    key: RUSTUP_HOME
-    value: AppData\Local\Rust\Rustup
-  - command: yazi
-    key: YAZI_FILE_ONE
-    value: "C:\\Program Files\\Git\\usr\\bin\\file.exe"
-  - command: yazi
-    key: YAZI_CONFIG_HOME
-    value: .config\yazi
-  - command: vagrant
-    key: VAGRANT_DEFAULT_PROVIDER
-    value: virtualbox
-
-# PowerShell configuration
 powershell:
   experimental_features:
-    enable: false
+    enable: true
     features:
       - PSNativeWindowsTildeExpansion
-      - PSSubsystemPluginModule
       - PSFeedbackProvider
   modules:
     - name: BurntToast
@@ -298,71 +341,3 @@ powershell:
     - CurrentUser
     - -Force
     - -AllowClobber
-
-# Theme configurations
-themes:
-  catppuccin_flavors:
-    - Mocha
-    - Macchiato
-    - Frappe
-    - Latte
-
-  # FlowLauncher theme configuration
-  flowlauncher:
-    enable: true
-    theme_dir: "%APPDATA%\\FlowLauncher\\Themes"
-
-  # btop theme configuration
-  btop:
-    enable: true
-
-# Add-ons configuration
-addons:
-  - command: gh
-    command_check: gh extension list
-    command_invoke: gh extension install
-    install: false
-    packages:
-      - dlvhdr/gh-dash
-      - yuler/gh-download
-      - seachicken/gh-poi
-      - Link-/gh-token
-      - yusukebe/gh-markdown-preview
-      - Shresht7/gh-license
-
-# Symlinks configuration
-symlinks:
-  # Directories to create symlinks for
-  # Each directory contains files that will be symlinked to the destination
-  directories:
-    - source: config/home
-      destination: '%USERPROFILE%'
-    - source: config/config
-      destination: '%USERPROFILE%/.config'
-    - source: config/AppData
-      destination: '%USERPROFILE%/AppData'
-
-  # Overrides specify paths that should be forced to symlink even if the target exists
-  # This is useful for files that may already exist but you want to replace with your config
-  # Options:
-  # - Exact path: "d:/dots/config/file.txt" (will match only this exact file)
-  # - Directory path: "d:/dots/config/dir" (will match all files in this directory)
-  # - Wildcard path: "d:/dots/config/*.json" (will match all json files in this directory)
-  # - Recursive wildcard: "d:/dots/config/**/*.json" (will match all json files in all subdirectories)
-  overrides:
-    # Forces Windows Terminal settings to be replaced even if the file already exists
-    - d:/dots/config/appdata/local/packages/microsoft.windowsterminal_8wekyb3d8bbwe/localstate/settings.json
-
-# Miscellaneous configurations
-misc:
-  wsl_install: true
-
-  # Komorebi (tiling window manager)
-  komorebi:
-    enable: true
-    enable_autostart: true
-
-  # YASB (taskbar)
-  yasb:
-    enable: true
-    enable_autostart: true

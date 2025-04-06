@@ -67,27 +67,6 @@ function Write-TitleBox {
 	''
 }
 
-# Source:
-# - https://stackoverflow.com/questions/2688547/multiple-foreground-colors-in-powershell-in-one-command
-function Write-ColorText {
-	param ([string]$Text, [switch]$NoNewLine)
-
-	$hostColor = $Host.UI.RawUI.ForegroundColor
-
-	$Text.Split([char]'{', [char]'}') | ForEach-Object -Begin { $i = 0 } -Process {
-		if ($i % 2 -eq 0) { Write-Host $_ -NoNewline }
-		else {
-			if ($_ -in [enum]::GetNames("ConsoleColor")) {
-				$Host.UI.RawUI.ForegroundColor = ($_ -as [System.ConsoleColor])
-			}
-		}
-		$i++
-	}
-
-	if (!$NoNewLine) { Write-Host }
-	$Host.UI.RawUI.ForegroundColor = $hostColor
-}
-
 function Add-ScoopBucket {
 	param ([string]$BucketName, [string]$BucketRepo)
 
@@ -99,7 +78,7 @@ function Add-ScoopBucket {
 			scoop bucket add $BucketName
 		}
 	} else {
-		Write-ColorText "{Blue}[bucket] {Magenta}scoop: {Yellow}(exists) {Gray}$BucketName"
+		Write-Color -Text "[bucket] ", "scoop: ", "(exists) ", $BucketName -Color Blue, Magenta, Yellow, Gray
 	}
 }
 
@@ -114,7 +93,7 @@ function Install-ScoopApp {
 		}
 		''; Invoke-Expression "$scoopCmd"; ''
 	} else {
-		Write-ColorText "{Blue}[package] {Magenta}scoop: {Yellow}(exists) {Gray}$Package"
+		Write-Color -Text "[package] ", "scoop: ", "(exists) ", $Package -Color Blue, Magenta, Yellow, Gray
 	}
 }
 
@@ -132,12 +111,12 @@ function Install-WinGetApp {
 		else { $wingetCmd += " --source winget" }
 		Invoke-Expression "$wingetCmd >`$null 2>&1"
 		if ($LASTEXITCODE -eq 0) {
-			Write-ColorText "{Blue}[package] {Magenta}winget: {Green}(success) {Gray}$PackageID"
+			Write-Color -Text "[package] ", "winget: ", "(success) ", $PackageID -Color Blue, Magenta, Green, Gray
 		} else {
-			Write-ColorText "{Blue}[package] {Magenta}winget: {Red}(failed) {Gray}$PackageID"
+			Write-Color -Text "[package] ", "winget: ", "(failed) ", $PackageID -Color Blue, Magenta, Red, Gray
 		}
 	} else {
-		Write-ColorText "{Blue}[package] {Magenta}winget: {Yellow}(exists) {Gray}$PackageID"
+		Write-Color -Text "[package] ", "winget: ", "(exists) ", $PackageID -Color Blue, Magenta, Yellow, Gray
 	}
 }
 
@@ -157,12 +136,12 @@ function Install-ChocoApp {
 		}
 		Invoke-Expression "$chocoCmd >`$null 2>&1"
 		if ($LASTEXITCODE -eq 0) {
-			Write-ColorText "{Blue}[package] {Magenta}choco: {Green}(success) {Gray}$Package"
+			Write-Color -Text "[package] ", "choco: ", "(success) ", $Package -Color Blue, Magenta, Green, Gray
 		} else {
-			Write-ColorText "{Blue}[package] {Magenta}choco: {Red}(failed) {Gray}$Package"
+			Write-Color -Text "[package] ", "choco: ", "(failed) ", $Package -Color Blue, Magenta, Red, Gray
 		}
 	} else {
-		Write-ColorText "{Blue}[package] {Magenta}choco: {Yellow}(exists) {Gray}$Package"
+		Write-Color -Text "[package] ", "choco: ", "(exists) ", $Package -Color Blue, Magenta, Yellow, Gray
 	}
 }
 
@@ -170,7 +149,7 @@ function Install-PowerShellModule {
 	param ([string]$Module, [string]$Version, [array]$AdditionalArgs)
 
 	if (!(Get-InstalledModule -Name $Module -ErrorAction SilentlyContinue)) {
-		Write-ColorText "{Blue}[module] {Magenta}pwsh: {Gray}Installing $Module..."
+		Write-Color -Text "[module] ", "pwsh: ", "Installing $Module..." -Color Blue, Magenta, Gray
 		$params = @{
 			Name = $Module
 		}
@@ -215,15 +194,15 @@ function Install-PowerShellModule {
 
 			# Verify the installation succeeded
 			if (Get-InstalledModule -Name $Module -ErrorAction SilentlyContinue) {
-				Write-ColorText "{Blue}[module] {Magenta}pwsh: {Green}(success) {Gray}$Module"
+				Write-Color -Text "[module] ", "pwsh: ", "(success) ", $Module -Color Blue, Magenta, Green, Gray
 			} else {
-				Write-ColorText "{Blue}[module] {Magenta}pwsh: {Red}(failed) {Gray}$Module - module not found after installation attempt"
+				Write-Color -Text "[module] ", "pwsh: ", "(failed) ", "$Module - module not found after installation attempt" -Color Blue, Magenta, Red, Gray
 			}
 		} catch {
-			Write-ColorText "{Blue}[module] {Magenta}pwsh: {Red}(failed) {Gray}$Module - $($_.Exception.Message)"
+			Write-Color -Text "[module] ", "pwsh: ", "(failed) ", "$Module - $($_.Exception.Message)" -Color Blue, Magenta, Red, Gray
 		}
 	} else {
-		Write-ColorText "{Blue}[module] {Magenta}pwsh: {Yellow}(exists) {Gray}$Module"
+		Write-Color -Text "[module] ", "pwsh: ", "(exists) ", $Module -Color Blue, Magenta, Yellow, Gray
 	}
 }
 
@@ -298,7 +277,7 @@ function Write-LockFile {
 			if (!(Get-Command winget -ErrorAction SilentlyContinue)) { return }
 			winget export -o $dest | Out-Null
 			if ($LASTEXITCODE -eq 0) {
-				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$((Resolve-Path $dest).Path)"
+				Write-Color -Text "`n✔️  Packages installed by ", $PackageSource, " are exported at ", $((Resolve-Path $dest).Path) -Color White, Green, Gray, Red
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -306,7 +285,7 @@ function Write-LockFile {
 			if (!(Get-Command choco -ErrorAction SilentlyContinue)) { return }
 			choco export $dest | Out-Null
 			if ($LASTEXITCODE -eq 0) {
-				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$((Resolve-Path $dest).Path)"
+				Write-Color -Text "`n✔️  Packages installed by ", $PackageSource, " are exported at ", $((Resolve-Path $dest).Path) -Color White, Green, Gray, Red
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -314,14 +293,14 @@ function Write-LockFile {
 			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
 			scoop export -c > $dest
 			if ($LASTEXITCODE -eq 0) {
-				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$((Resolve-Path $dest).Path)"
+				Write-Color -Text "`n✔️  Packages installed by ", $PackageSource, " are exported at ", $((Resolve-Path $dest).Path) -Color White, Green, Gray, Red
 			}
 			Start-Sleep -Seconds 1
 		}
 		"modules" {
 			Get-InstalledModule | Select-Object -Property Name, Version | ConvertTo-Json -Depth 100 | Out-File $dest
 			if ($LASTEXITCODE -eq 0) {
-				Write-ColorText "`n✔️  {Green}PowerShell Modules {Gray}installed are exported at {Red}$((Resolve-Path $dest).Path)"
+				Write-Color -Text "`n✔️  ", "PowerShell Modules ", "installed are exported at ", $((Resolve-Path $dest).Path) -Color White, Green, Gray, Red
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -349,6 +328,11 @@ function New-SymbolicLinks {
 	$normalizedOverrides = @()
 	if ($Overrides -and $Overrides.Count -gt 0) {
 		$normalizedOverrides = $Overrides | Where-Object { $_ } | ForEach-Object {
+			# Check if the path is relative (doesn't start with a drive letter or UNC path)
+			if (-not [System.IO.Path]::IsPathRooted($_)) {
+				# Convert relative path to absolute path using the script's location
+				$_ = Join-Path $PSScriptRoot $_
+			}
 			$_.ToLower().Replace('\', '/')
 		}
 		Write-Verbose "Processing with $($normalizedOverrides.Count) normalized overrides"
@@ -406,7 +390,7 @@ function New-SymbolicLinks {
 
 			if (!$isSymlink) {
 				Remove-Item -Path $destinationPath -Force -ErrorAction SilentlyContinue
-				Write-ColorText "{Blue}[symlink] {Yellow}(override) {Red}Removed existing file: {Gray}$destinationPath"
+				Write-Color -Text "[symlink] ", "(override) ", "Removed existing file: ", $destinationPath -Color Blue, Yellow, Red, Gray
 			}
 		}
 
@@ -414,9 +398,9 @@ function New-SymbolicLinks {
 		if (!(Test-Path $destinationPath) -or $isOverride) {
 			try {
 				New-Item -ItemType SymbolicLink -Path $destinationPath -Target $item.FullName -Force -ErrorAction Stop | Out-Null
-				Write-ColorText "{Blue}[symlink] {Green}$($item.FullName) {Yellow}--> {Gray}$destinationPath"
+				Write-Color -Text "[symlink] ", $($item.FullName), " --> ", $destinationPath -Color Blue, Green, Yellow, Gray
 			} catch {
-				Write-ColorText "{Blue}[symlink] {Red}Failed to create symlink: {Gray}$($_.Exception.Message)"
+				Write-Color -Text "[symlink] ", "Failed to create symlink: ", $($_.Exception.Message) -Color Blue, Red, Gray
 			}
 		}
 	}
@@ -430,14 +414,14 @@ function Get-SymlinkOverrides {
 	$overrides = @()
 
 	if (!(Test-Path $ConfigPath)) {
-		Write-ColorText "{Blue}[symlink] {Yellow}No config file found at {Gray}$ConfigPath"
+		Write-Color -Text "[symlink] ", "No config file found at ", $ConfigPath -Color Blue, Yellow, Gray
 		return $overrides
 	}
 
 	try {
 		$module = "powershell-yaml"
 		if (!(Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
-			Write-ColorText "{Yellow}PowerShell-Yaml module not found. Installing..."
+			Write-Color -Text "PowerShell-Yaml module not found. Installing..." -Color Yellow
 			Install-Module $module -Scope CurrentUser -Force -ErrorAction Stop
 		}
 
@@ -448,17 +432,17 @@ function Get-SymlinkOverrides {
 			$overrides = $config.symlinks.overrides
 		}
 	} catch {
-		Write-ColorText "{Blue}[symlink] {Red}Error parsing YAML file: {Gray}$($_.Exception.Message)"
+		Write-Color -Text "[symlink] ", "Error parsing YAML file: ", $($_.Exception.Message) -Color Blue, Red, Gray
 	}
 
 	# Log each override path for debugging
 	if ($overrides.Count -gt 0) {
-		Write-ColorText "{Blue}[symlink] {Green}Loaded {Yellow}$($overrides.Count) {Green}overrides from config"
+		Write-Color -Text "[symlink] ", "Loaded ", $overrides.Count, " overrides from config" -Color Blue, Green, Yellow, Green
 		$overrides | ForEach-Object {
 			Write-Verbose "  Override: $_"
 		}
 	} else {
-		Write-ColorText "{Blue}[symlink] {Yellow}No override paths found in {Gray}$ConfigPath"
+		Write-Color -Text "[symlink] ", "No override paths found in ", $ConfigPath -Color Blue, Yellow, Gray
 	}
 
 	return $overrides
@@ -470,14 +454,14 @@ function Get-YamlConfig {
 	)
 
 	if (!(Test-Path $ConfigPath)) {
-		Write-ColorText "{Red}Config file not found at {Gray}$ConfigPath"
+		Write-Color -Text "Config file not found at ", $ConfigPath -Color Red, Gray
 		exit 1
 	}
 
 	try {
 		$module = "powershell-yaml"
 		if (!(Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
-			Write-ColorText "{Yellow}PowerShell-Yaml module not found. Installing..."
+			Write-Color -Text "PowerShell-Yaml module not found. Installing..." -Color Yellow
 			Install-Module $module -Scope CurrentUser -Force -ErrorAction Stop
 		}
 
@@ -487,11 +471,11 @@ function Get-YamlConfig {
 			$config = ConvertFrom-Yaml -Yaml $content -ErrorAction Stop
 			return $config
 		} catch {
-			Write-ColorText "{Red}Error parsing YAML file: {Gray}$($_.Exception.Message)"
+			Write-Color -Text "Error parsing YAML file: ", $($_.Exception.Message) -Color Red, Gray
 			exit 1
 		}
 	} catch {
-		Write-ColorText "{Red}Failed to load PowerShell-Yaml module: {Gray}$($_.Exception.Message)"
+		Write-Color -Text "Failed to load PowerShell-Yaml module: ", $($_.Exception.Message) -Color Red, Gray
 		exit 1
 	}
 }
@@ -499,6 +483,13 @@ function Get-YamlConfig {
 ########################################################################
 ###														MAIN SCRIPT 		  					 			 		 ###
 ########################################################################
+# Ensure PSWriteColor is installed and imported
+if (-not (Get-Module -ListAvailable -Name PSWriteColor)) {
+	Write-Host "Installing PSWriteColor module..."
+	Install-Module -Name PSWriteColor -Force -Scope CurrentUser
+}
+Import-Module PSWriteColor
+
 # check network connectivity
 $internetConnection = Test-NetConnection google.com -CommonTCPPort HTTP -InformationLevel Detailed -WarningAction SilentlyContinue
 $internetAvailable = $internetConnection.TcpTestSucceeded
@@ -506,14 +497,14 @@ if ($internetAvailable -eq $False) {
 	Write-Warning "NO INTERNET CONNECTION AVAILABLE!"
 	Write-Host "Please check your internet connection and re-run this script.`n"
 	for ($countdown = 3; $countdown -ge 0; $countdown--) {
-		Write-ColorText "`r{DarkGray}Automatically exiting in {Blue}$countdown second(s){DarkGray}..." -NoNewLine
+		Write-Color -Text "`r", "Automatically exiting in ", $countdown, " second(s)..." -Color DarkGray, Blue, DarkGray
 		Start-Sleep -Seconds 1
 	}
 	exit
 }
 
 Write-Progress -Completed; Clear-Host
-Write-ColorText "`n✅ {Green}Connected.`n`n{DarkGray}Starting setup..."
+Write-Color -Text "`n✅ ", "Connected.", "`n`n", "Starting setup..." -Color White, Green, White, DarkGray
 Start-Sleep -Seconds 3
 
 # Save the current location to return to later
@@ -542,7 +533,7 @@ if ($packagesEnabled) {
 
 	# WinGet packages
 	if ($wingetEnabled) {
-		Write-ColorText "{Green}Installing WinGet packages..."
+		Write-Color -Text "Installing WinGet packages..." -Color Green
 		foreach ($package in $config.packages.winget.packages) {
 			$id = $package.id
 			$packageArgs = $package.args
@@ -553,12 +544,12 @@ if ($packagesEnabled) {
 			}
 			Install-WinGetApp -PackageID $id -AdditionalArgs $packageArgs
 		}
-		Write-ColorText "{Green}WinGet packages installed successfully!"
+		Write-Color -Text "WinGet packages installed successfully!" -Color Green
 	}
 
 	# Scoop packages
 	if ($scoopEnabled) {
-		Write-ColorText "{Green}Setting up Scoop..."
+		Write-Color -Text "Setting up Scoop..." -Color Green
 
 		# Add buckets
 		foreach ($bucket in $config.packages.scoop.buckets) {
@@ -573,12 +564,12 @@ if ($packagesEnabled) {
 			$scope = $package.scope
 			Install-ScoopApp -Package $name -Global:($scope -eq "global")
 		}
-		Write-ColorText "{Green}Scoop packages installed successfully!"
+		Write-Color -Text "Scoop packages installed successfully!" -Color Green
 	}
 
 	# Chocolatey packages
 	if ($chocolateyEnabled) {
-		Write-ColorText "{Green}Installing Chocolatey packages..."
+		Write-Color -Text "Installing Chocolatey packages..." -Color Green
 		foreach ($package in $config.packages.chocolatey.packages) {
 			$name = $package.name
 			$packageArgs = $package.args
@@ -589,10 +580,10 @@ if ($packagesEnabled) {
 			}
 			Install-ChocoApp -Package $name -AdditionalArgs $packageArgs
 		}
-		Write-ColorText "{Green}Chocolatey packages installed successfully!"
+		Write-Color -Text "Chocolatey packages installed successfully!" -Color Green
 	}
 } else {
-	Write-ColorText "{Yellow}Package installation is disabled in config."
+	Write-Color -Text "Package installation is disabled in config." -Color Yellow
 }
 
 ########################################################################
@@ -601,37 +592,25 @@ if ($packagesEnabled) {
 $powershellEnabled = $config.features.powershell -eq $true
 
 if ($powershellEnabled) {
-	Write-TitleBox "🔧 POWERSHELL"
+	Write-TitleBox "💻 POWERSHELL"
 
-	# Install PowerShell modules
-	Write-ColorText "{Green}Installing PowerShell modules..."
-	foreach ($module in $config.powershell.modules) {
-		$name = $module.name
-		$version = $module.min_version
-		Install-PowerShellModule -Module $name -Version $version -AdditionalArgs $config.powershell.additional_args
-	}
-
-	# Configure experimental features if enabled
-	if ($config.powershell.experimental_features.enable) {
-		Write-ColorText "{Green}Enabling PowerShell experimental features..."
-		foreach ($feature in $config.powershell.experimental_features.features) {
-			$featureExists = Get-ExperimentalFeature -Name $feature -ErrorAction SilentlyContinue
-			if ($featureExists -and ($featureExists.Enabled -eq $False)) {
-				Enable-ExperimentalFeature -Name $feature -Scope CurrentUser -ErrorAction SilentlyContinue
-				if ($LASTEXITCODE -eq 0) {
-					Write-ColorText "{Blue}[experimental feature] {Magenta}pwsh: {Green}(success) {Gray}$feature"
-				} else {
-					Write-ColorText "{Blue}[experimental feature] {Magenta}pwsh: {Red}(failed) {Gray}$feature"
-				}
-			} else {
-				Write-ColorText "{Blue}[experimental feature] {Magenta}pwsh: {Yellow}(enabled) {Gray}$feature"
-			}
+	# Modules
+	$skipModules = ($config.powershell.modules -and $config.powershell.modules.enable -eq $false)
+	if (-not $skipModules) {
+		foreach ($module in $config.powershell.modules) {
+			Install-PowerShellModule -Module $module.name -Version $module.min_version -AdditionalArgs $config.powershell.additional_args
 		}
 	}
 
-	Write-ColorText "{Green}PowerShell configuration complete!"
+	# Experimental features
+	$skipFeatures = ($config.powershell.experimental_features -and $config.powershell.experimental_features.enable -eq $false)
+	if (-not $skipFeatures) {
+		foreach ($feature in $config.powershell.experimental_features.features) {
+			Enable-ExperimentalFeature -Name $feature -Scope CurrentUser
+		}
+	}
 } else {
-	Write-ColorText "{Yellow}PowerShell configuration is disabled in config."
+	Write-Color -Text "PowerShell configuration is disabled in config." -Color Yellow
 }
 
 ####################################################################
@@ -643,7 +622,7 @@ if ($symlinksEnabled) {
 	Write-TitleBox "🔗 SYMLINKS"
 
 	# Create symlinks for each directory
-	Write-ColorText "{Green}Creating symlinks..."
+	Write-Color -Text "Creating symlinks..." -Color Green
 
 	# Get directory mappings from config
 	$symlinkDirs = $config.symlinks.directories
@@ -655,9 +634,9 @@ if ($symlinksEnabled) {
 		# Create symlinks
 		New-SymbolicLinks -Source "$PSScriptRoot\$source" -Destination $destination -Recurse -Overrides $config.symlinks.overrides
 	}
-	Write-ColorText "{Green}Symlinks created successfully!"
+	Write-Color -Text "Symlinks created successfully!" -Color Green
 } else {
-	Write-ColorText "{Yellow}Symlinks configuration is disabled in config."
+	Write-Color -Text "Symlinks configuration is disabled in config." -Color Yellow
 }
 
 ##########################################################################
@@ -700,22 +679,22 @@ if ($environmentEnabled) {
 					Write-Verbose "Set environment variable of $envCommand`: $envKey - > $envValue"
 					try {
 						[System.Environment]::SetEnvironmentVariable($envKey, $envValue, "User")
-						Write-ColorText "{Blue}[environment] {Green}(updated) {Magenta}$envKey {Yellow}--> {Gray}$envValue"
+						Write-Color -Text "[environment] ", "(updated) ", $envKey, " --> ", $envValue -Color Blue, Green, Magenta, Yellow, Gray
 					} catch {
 						Write-Error "An error occurred: $_"
 					}
 				} else {
-					Write-ColorText "{Blue}[environment] {Yellow}(exists) {Magenta}$envKey {Yellow}--> {Gray}$existingValue"
+					Write-Color -Text "[environment] ", "(exists) ", $envKey, " --> ", $existingValue -Color Blue, Yellow, Magenta, Yellow, Gray
 				}
 			} else {
-				Write-ColorText "{Blue}[environment] {Red}(skipped) {Magenta}$envKey {Yellow}--> {Gray}Command '$envCommand' not found"
+				Write-Color -Text "[environment] ", "(skipped) ", $envKey, " --> ", "Command '$envCommand' not found" -Color Blue, Red, Magenta, Yellow, Gray
 			}
 		}
 	}
 	$iterationCounter = $i++  # Use a different variable to avoid the unused variable warning
 	Refresh $iterationCounter
 } else {
-	Write-ColorText "{Yellow}Environment variable configuration is disabled in config."
+	Write-Color -Text "Environment variable configuration is disabled in config." -Color Yellow
 }
 
 #######################################################################
@@ -725,104 +704,192 @@ $addonsEnabled = $config.features.addons -eq $true
 
 if ($addonsEnabled) {
 	Write-TitleBox "🧩 ADDONS"
-	if ($config.addons) {
-		foreach ($a in $config.addons) {
-			$aCommandName = $a.command
-			$aCommandCheck = $a.command_check
-			$aCommandInvoke = $a.command_invoke
-			$aList = [array]$a.packages
-			$aInstall = $a.install
-
-			if ($aInstall -eq $true) {
-				if (Get-Command $aCommandName -ErrorAction SilentlyContinue) {
-					Write-TitleBox -Title "$aCommandName's Addons Installation"
-					foreach ($p in $aList) {
-						if (Invoke-Expression "$aCommandCheck" | Out-String | Where-Object { $_ -notmatch "$p*" }) {
-							Write-Verbose "Executing: $aCommandInvoke $p"
-							Invoke-Expression "$aCommandInvoke $p >`$null 2>&1"
-							if ($LASTEXITCODE -eq 0) {
-								Write-ColorText "➕ {Blue}[addon] {Magenta}$aCommandName`: {Green}(success) {Gray}$p"
-							} else {
-								Write-ColorText "➕ {Blue}[addon] {Magenta}$aCommandName`: {Red}(failed) {Gray}$p"
-							}
-						} else {
-							Write-ColorText "➕ {Blue}[addon] {Magenta}$aCommandName`: {Yellow}(exists) {Gray}$p"
-						}
+	foreach ($addon in $config.addons) {
+		$skipAddon = ($addon.install -eq $false)
+		if (-not $skipAddon) {
+			$commandName = $addon.command
+			$commandCheck = $addon.command_check
+			$commandInvoke = $addon.command_invoke
+			if (Get-Command $commandName -ErrorAction SilentlyContinue) {
+				foreach ($package in $addon.packages) {
+					if (Invoke-Expression "$commandCheck" | Out-String | Where-Object { $_ -notmatch "$package*" }) {
+						Invoke-Expression "$commandInvoke $package"
 					}
-				} else {
-					Write-Warning "Command not found: $aCommandName."
 				}
 			}
 		}
-		Refresh ($i++)
 	}
+	Refresh ($i++)
 } else {
-	Write-ColorText "{Yellow}Addons configuration is disabled in config."
+	Write-Color -Text "Addons configuration is disabled in config." -Color Yellow
 }
 
 ##########################################################################
-###													THEMES 								 				 						###
+###                             THEMES                                 ###
 ##########################################################################
 $themesEnabled = $config.features.themes -eq $true
 
 if ($themesEnabled) {
-	Write-TitleBox -Title "😎 Themes"
+	Write-TitleBox -Title "😎 THEMES"
 
-	$catppuccinThemes = $config.themes.catppuccin_flavors
-	if (-not $catppuccinThemes) {
-		$catppuccinThemes = @('Mocha')
+	# Hard-coded defaults that will be used if not specified in config
+	$defaultCatppuccinFlavors = @('Mocha', 'Macchiato', 'Frappe', 'Latte')
+
+	# Get theme flavors to install
+	$catppuccinFlavors = $defaultCatppuccinFlavors
+	if ($config.themes -and $config.themes.catppuccin_flavors) {
+		$catppuccinFlavors = $config.themes.catppuccin_flavors
 	}
 
-	# flowlauncher
-	if ($config.themes.flowlauncher -and $config.themes.flowlauncher.enable) {
+	# FlowLauncher themes
+	$flowLauncherEnabled = $true  # Default to enabled
+	if ($config.themes -and $config.themes.flowlauncher -and $config.themes.flowlauncher.enable -eq $false) {
+		$flowLauncherEnabled = $false
+	}
+
+	# Check for custom Flow Launcher directory or use default
+	$flowLauncherDir = "$env:APPDATA\FlowLauncher\Themes"
+	if ($config.themes -and $config.themes.flowlauncher -and $config.themes.flowlauncher.theme_dir) {
 		$flowLauncherDir = $config.themes.flowlauncher.theme_dir -replace "%APPDATA%", $env:APPDATA
-		if (Test-Path "$flowLauncherDir" -PathType Container) {
-			$catppuccinThemes | ForEach-Object {
-				$themeFile = Join-Path "$flowLauncherDir" -ChildPath "Catppuccin ${_}.xaml"
-				if (!(Test-Path "$themeFile" -PathType Leaf)) {
-					Write-Verbose "Adding file: $themeFile to $flowLauncherDir."
-					Install-OnlineFile -OutputDir "$themeFile" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20${_}.xaml"
-					if ($LASTEXITCODE -eq 0) {
-						Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Green}(success) {Gray}$themeFile"
-					} else {
-						Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Red}(failed) {Gray}$themeFile"
-					}
-				} else {
-					Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Yellow}(exists) {Gray}$themeFile"
-				}
+	}
+
+	# Process Flow Launcher themes if enabled
+	if ($flowLauncherEnabled) {
+		# Use the correct Flow Launcher path
+		$flowLauncherDir = "$env:APPDATA\FlowLauncher\Themes"
+
+		# Create themes directory if it doesn't exist
+		if (!(Test-Path $flowLauncherDir -PathType Container)) {
+			Write-Color -Text "Creating Flow Launcher themes directory: ", $flowLauncherDir -Color Yellow, Gray
+			New-Item -ItemType Directory -Path $flowLauncherDir -Force | Out-Null
+		}
+
+		Write-Color -Text "Installing Flow Launcher themes..." -Color Green
+
+		# Download and install each flavor - place directly in themes directory
+		foreach ($flavor in $catppuccinFlavors) {
+			# Use the correct URL format with master branch
+			$themeUrl = "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$flavor.xaml"
+			$themePath = Join-Path $flowLauncherDir "catppuccin_$($flavor.ToLower()).xaml"
+
+			try {
+				Invoke-WebRequest -Uri $themeUrl -OutFile $themePath -ErrorAction Stop
+				Write-Color -Text "[theme] ", "flowlauncher: ", "(installed) ", "Catppuccin $flavor" -Color Blue, Magenta, Green, Gray
+			} catch {
+				Write-Color -Text "[theme] ", "flowlauncher: ", "(failed) ", "Catppuccin $flavor - $($_.Exception.Message)" -Color Blue, Magenta, Red, Gray
 			}
 		}
 	}
 
-	$lowercaseCatppuccinThemes = $catppuccinThemes | ForEach-Object { $_.ToLower() }
+	# btop theme setup
+	$btopEnabled = $true  # Default to enabled
+	if ($config.themes -and $config.themes.btop -and $config.themes.btop.enable -eq $false) {
+		$btopEnabled = $false
+	}
 
-	# btop
-	if ($config.themes.btop -and $config.themes.btop.enable) {
-		$btopExists = Get-Command btop -ErrorAction SilentlyContinue
-		if ($btopExists) {
-			if ($btopExists.Source | Select-String -SimpleMatch -CaseSensitive "scoop") {
-				$btopThemeDir = Join-Path (scoop prefix btop) -ChildPath "themes"
-			} else {
-				$btopThemeDir = Join-Path ($btopExists.Source | Split-Path) -ChildPath "themes"
+	if ($btopEnabled) {
+		Write-Color -Text "Installing btop themes..." -Color Green
+
+		# Find btop's actual themes directory
+		$btopConfigDir = "$env:USERPROFILE\.config\btop"
+
+		# Also check if btop is installed via scoop for better path detection
+		$btopCommand = Get-Command btop -ErrorAction SilentlyContinue
+		if ($btopCommand) {
+			if ($btopCommand.Source -match "scoop") {
+				$btopConfigDir = Join-Path (scoop prefix btop) -ChildPath "themes"
 			}
-			$lowercaseCatppuccinThemes | ForEach-Object {
-				$themeFile = Join-Path "$btopThemeDir" -ChildPath "catppuccin_${_}.theme"
-				if (!(Test-Path "$themeFile" -PathType Leaf)) {
-					Write-Verbose "Adding file: $themeFile to $btopThemeDir."
-					Install-OnlineFile -OutputDir "$themeFile" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_${_}.theme"
-					if ($LASTEXITCODE -eq 0) {
-						Write-ColorText "{Blue}[theme] {Magenta}btop: {Green}(success) {Gray}$themeFile"
-					} else {
-						Write-ColorText "{Blue}[theme] {Magenta}btop: {Red}(failed) {Gray}$themeFile"
-					}
-				} else {
-					Write-ColorText "{Blue}[theme] {Magenta}btop: {Yellow}(exists) {Gray}$themeFile"
-				}
+		}
+
+		# # Create btop themes directory if needed
+		if (!(Test-Path "$btopConfigDir")) {
+			New-Item -ItemType Directory -Path "$btopConfigDir" -Force | Out-Null
+		}
+
+		# Download and install each flavor
+		foreach ($flavor in $catppuccinFlavors) {
+			$themeUrl = "https://raw.githubusercontent.com/catppuccin/btop/main/themes/catppuccin_$($flavor.ToLower()).theme"
+			$themePath = "$btopConfigDir\catppuccin_$($flavor.ToLower()).theme"
+
+			try {
+				Invoke-WebRequest -Uri $themeUrl -OutFile $themePath -ErrorAction Stop
+				Write-Color -Text "[theme] ", "btop: ", "(installed) ", "Catppuccin $flavor" -Color Blue, Magenta, Green, Gray
+			} catch {
+				Write-Color -Text "[theme] ", "btop: ", "(failed) ", "Catppuccin $flavor - $($_.Exception.Message)" -Color Blue, Magenta, Red, Gray
 			}
 		}
 	}
-} else {
-	Write-ColorText "{Yellow}Theme configuration is disabled in config."
+}
+
+# qBittorrent theme setup
+$qBittorrentEnabled = $true  # Default to enabled
+if ($config.themes -and $config.themes.qbittorrent -and $config.themes.qbittorrent.enable -eq $false) {
+	$qBittorrentEnabled = $false
+}
+
+if ($qBittorrentEnabled) {
+	Write-Color -Text "Installing qBittorrent themes..." -Color Green
+
+	# Find qBittorrent's actual themes directory
+	$qBittorrentThemeDir = "$env:USERPROFILE\.config\qBit\themes"
+
+	# Check if qBittorrent is installed via scoop for better path detection
+	$qBittorrentCommand = Get-Command qbittorrent -ErrorAction SilentlyContinue
+	if ($qBittorrentCommand) {
+		if ($qBittorrentCommand.Source -match "scoop") {
+			$scoopQbtPath = Join-Path (scoop prefix qbittorrent) -ChildPath "themes"
+			if (Test-Path $scoopQbtPath) {
+				$qBittorrentThemeDir = $scoopQbtPath
+			}
+		}
+	}
+
+	# Create qBittorrent themes directory if needed
+	if (!(Test-Path "$qBittorrentThemeDir")) {
+		New-Item -ItemType Directory -Path "$qBittorrentThemeDir" -Force | Out-Null
+		Write-Color -Text "Created directory: ", $qBittorrentThemeDir -Color Yellow, Gray
+	}
+
+	# Get the latest release tag dynamically using GitHub API
+	$repoName = "catppuccin/qbittorrent"
+	try {
+		$release = "https://api.github.com/repos/$repoName/releases/latest"
+		$releaseInfo = Invoke-RestMethod -Uri $release -ErrorAction Stop
+		$latestTag = $releaseInfo.tag_name
+
+		Write-Color -Text "Found latest qBittorrent theme release: ", $latestTag -Color Yellow, Gray
+
+		# Download and install each flavor
+		foreach ($flavor in $catppuccinFlavors) {
+			$fileName = "catppuccin-$($flavor.ToLower()).qbtheme"
+			$themeUrl = "https://github.com/$repoName/releases/download/$latestTag/$fileName"
+			$themePath = "$qBittorrentThemeDir\$fileName"
+
+			try {
+				Invoke-WebRequest -Uri $themeUrl -OutFile $themePath -ErrorAction Stop
+				Write-Color -Text "[theme] ", "qbittorrent: ", "(installed) ", "Catppuccin $flavor ($latestTag)" -Color Blue, Magenta, Green, Gray
+			} catch {
+				Write-Color -Text "[theme] ", "qbittorrent: ", "(failed) ", "Catppuccin $flavor - $($_.Exception.Message)" -Color Blue, Magenta, Red, Gray
+			}
+		}
+	} catch {
+		Write-Color -Text "[theme] ", "qbittorrent: ", "(error) ", "Failed to get latest release information: $($_.Exception.Message)" -Color Blue, Magenta, Red, Gray
+
+		# Fallback to a known version if API call fails
+		Write-Color -Text "Falling back to version v2.0.1..." -Color Yellow
+
+		foreach ($flavor in $catppuccinFlavors) {
+			$themeUrl = "https://github.com/catppuccin/qbittorrent/releases/download/v2.0.1/catppuccin-$($flavor.ToLower()).qbtheme"
+			$themePath = "$qBittorrentThemeDir\catppuccin-$($flavor.ToLower()).qbtheme"
+
+			try {
+				Invoke-WebRequest -Uri $themeUrl -OutFile $themePath -ErrorAction Stop
+				Write-Color -Text "[theme] ", "qbittorrent: ", "(installed) ", "Catppuccin $flavor (fallback)" -Color Blue, Magenta, Green, Gray
+			} catch {
+				Write-Color -Text "[theme] ", "qbittorrent: ", "(failed) ", "Catppuccin $flavor - $($_.Exception.Message)" -Color Blue, Magenta, Red, Gray
+			}
+		}
+	}
 }
 
 ######################################################################
@@ -831,95 +898,43 @@ if ($themesEnabled) {
 $miscEnabled = $config.features.misc -eq $true
 
 if ($miscEnabled) {
-	Write-TitleBox "🦀 Miscellaneous"
+	Write-TitleBox "🦀 MISCELLANEOUS"
 
-	# yazi
-	if (Get-Command ya -ErrorAction SilentlyContinue) {
-		Write-Verbose "Installing yazi plugins / themes"
-		ya pack -i >$null 2>&1
-		ya pack -u >$null 2>&1
+	# WSL Installation
+	$skipWsl = ($config.misc.wsl_install -eq $false)
+	if (-not $skipWsl) {
+		if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
+			Start-Process -FilePath "PowerShell" -ArgumentList "wsl", "--install" -Verb RunAs -Wait -WindowStyle Hidden
+		}
 	}
 
-	# bat
-	if (Get-Command bat -ErrorAction SilentlyContinue) {
-		Write-Verbose "Building bat theme"
-		bat cache --clear
-		bat cache --build
+	# Komorebi
+	$skipKomorebi = ($config.misc.komorebi -and $config.misc.komorebi.enable -eq $false)
+	if (-not $skipKomorebi) {
+		if ($config.misc.komorebi) {
+			if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
+				if ($config.misc.komorebi.enable_autostart) {
+					Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait
+				}
+				Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "start", "--whkd" -WindowStyle Hidden
+			}
+		}
 	}
 
-	# Komorebi and YASB
-	if ($config.misc) {
-		Write-TitleBox "👾 Komorebi & Yasb"
-
-		# yasb
-		if ($config.misc.yasb -and $config.misc.yasb.enable) {
-			if (Get-Command yasbc -ErrorAction SilentlyContinue) {
+	# YASB
+	$skipYasb = ($config.misc.yasb -and $config.misc.yasb.enable -eq $false)
+	if (-not $skipYasb) {
+		if ($config.misc.yasb) {
+			if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
 				if ($config.misc.yasb.enable_autostart) {
-					if (!(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" })) {
-						try {
-							& yasbc.exe enable-autostart --task
-						} catch {
-							Write-Error "$_"
-						}
-					}
+					Start-Process "powershell.exe" -ArgumentList "yasbc.exe", "enable-autostart", "--task" -WindowStyle Hidden -Wait
 				}
-				if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
-					try {
-						& yasbc.exe start
-					} catch {
-						Write-Error "$_"
-					}
-				} else {
-					Write-Host "✅ YASB is already running."
-				}
-			} else {
-				Write-Warning "Command not found: yasbc."
-			}
-		}
-
-		# komorebi
-		if ($config.misc.komorebi -and $config.misc.komorebi.enable) {
-			if (Get-Command komorebic -ErrorAction SilentlyContinue) {
-				if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
-					$whkdExists = Get-Command whkd -ErrorAction SilentlyContinue
-					$whkdProcess = Get-Process -Name whkd -ErrorAction SilentlyContinue
-
-					if ($config.misc.komorebi.enable_autostart) {
-						if ($whkdExists -and (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\komorebi.lnk"))) {
-							try {
-								Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait
-							} catch {
-								Write-Error "$_"
-							}
-						}
-					}
-
-					Write-Host "Starting Komorebi..."
-					if ($whkdExists -and (!$whkdProcess)) {
-						try {
-							Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "start", "--whkd" -WindowStyle Hidden
-						} catch {
-							Write-Error "$_"
-						}
-					}
-				} else {
-					Write-Host "✅ Komorebi is already running."
-				}
-			} else {
-				Write-Warning "Command not found: komorebic."
-			}
-		}
-
-		# WSL
-		if ($config.misc.wsl_install) {
-			if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
-				Write-Verbose -Message "Installing Windows SubSystems for Linux..."
-				Start-Process -FilePath "PowerShell" -ArgumentList "wsl", "--install" -Verb RunAs -Wait -WindowStyle Hidden
+				Start-Process "powershell.exe" -ArgumentList "yasbc.exe", "start" -WindowStyle Hidden
 			}
 		}
 	}
 } else {
-	Write-ColorText "{Yellow}Miscellaneous configuration is disabled in config."
+	Write-Color -Text "Miscellaneous configuration is disabled in config." -Color Yellow
 }
 
 # Return to the starting location
@@ -936,6 +951,6 @@ Write-Host "│       ██║  ██║███████╗████�
 Write-Host "│       ╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ╚═╝      │" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
 Write-Host "└────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor "Green"
-Write-ColorText "`n`n{Grey}For more information, please visit: {Blue}https://github.com/cwelsys/windows`n"
-Write-ColorText "😤 {Gray}Submit an issue via: {Blue}https://github.com/cwelsys/windows/issues/new"
-Write-ColorText "📨 {Gray}Contact me via email: {Cyan}cwel@cwel.sh"
+Write-Color -Text "`n`n", "For more information, please visit: ", "https://github.com/cwelsys/windows`n" -Color Gray, Blue
+Write-Color -Text "😤 ", "Submit an issue via: ", "https://github.com/cwelsys/windows/issues/new" -Color White, Gray, Blue
+Write-Color -Text "📨 ", "Contact me via email: ", "cwel@cwel.sh" -Color White, Gray, Cyan

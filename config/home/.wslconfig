@@ -1,8 +1,13 @@
 [wsl2]
-networkingMode=mirrored
+
 memory=4GB
 processors=4
 swap=8GB
+swapfile=G:\\wsl\\swap\\swap.vhdx
+networkingMode=mirrored
+kernelCommandLine = cgroup_no_v1="all"
+
 [experimental]
-hostAddressLoopback=true
+autoMemoryReclaim=dropcache
 bestEffortDnsParsing=true
+hostAddressLoopback=true

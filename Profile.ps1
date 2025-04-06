@@ -24,7 +24,7 @@ Import-Module Catppuccin
 
 # 🐚 Prompt
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-	oh-my-posh init pwsh --config "$Env:PWSH\posher.toml" | Invoke-Expression
+	oh-my-posh init pwsh --config "$Env:PWSH\zen.toml" | Invoke-Expression
 	$Env:POSH_GIT_ENABLED = $true
 }
 

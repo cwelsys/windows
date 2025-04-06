@@ -31,7 +31,12 @@ shopt -s histappend histverify
 
 # oh-my-posh
 if command -v oh-my-posh >/dev/null 2>&1; then
-	eval "$(oh-my-posh init bash --config "$DOTFILES"/config/bash/bash-zen.toml)"
+	eval "$(oh-my-posh init bash --config "$HOME/.config/bash/bash-zen.toml")"
+fi
+
+# vfox
+if command -v vfox >/dev/null 2>&1; then
+	eval "$(vfox activate bash)"
 fi
 
 # zoxide
@@ -43,5 +48,3 @@ fi
 if command -v fastfetch >/dev/null 2>&1; then
 	fastfetch
 fi
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
