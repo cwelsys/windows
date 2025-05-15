@@ -36,7 +36,7 @@ if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
 
 # 🐶 FastFetch
 if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
-	if ([Environment]::GetCommandLineArgs().Contains("-NonInteractive")) {
+	if ([Environment]::GetCommandLineArgs().Contains("-NonInteractive") -or $Env:TERM_PROGRAM -eq "vscode") {
 		Return
 	}
 	fastfetch
@@ -71,11 +71,6 @@ function y {
 	}
 	Remove-Item -Path $tmp
 }
-
-# 🍫 choco
-# if (Get-Command choco -ErrorAction SilentlyContinue) {
-# 	Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 -Global
-# }
 
 # 🥣 scoop
 Invoke-Expression (&scoop-search --hook)

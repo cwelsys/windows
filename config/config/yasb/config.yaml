@@ -288,7 +288,7 @@ widgets:
       update_interval: 600 # Update interval in seconds, Min 600 seconds
       hide_decimal: true
       units: 'imperial'
-      location: 'Arlington 22201' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
+      location: '22213' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
       callbacks:
         on_left: 'toggle_label'
       icons:

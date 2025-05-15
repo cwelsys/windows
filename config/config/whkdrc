@@ -29,7 +29,7 @@ alt + shift + l         : komorebic move right
 alt + shift + return    : komorebic promote
 
 # Gamer style
-f13 + a 								: komorebic move left
+f13 + a 	    					: komorebic move left
 f13 + s 								: komorebic move down
 f13 + w 								: komorebic move up
 f13 + d 								: komorebic move right
@@ -41,7 +41,7 @@ alt + up                : komorebic stack up
 alt + right             : komorebic stack right
 alt + oem_1             : komorebic unstack # oem_1 is ;
 alt + oem_4             : komorebic cycle-stack previous # oem_4 is [
-alt + oem_6             : komorebic cycle-stack next # oem_6 is ]dadadaddad
+alt + oem_6             : komorebic cycle-stack next # oem_6 is ]
 
 # Resize
 alt + oem_plus          : komorebic resize-axis horizontal increase

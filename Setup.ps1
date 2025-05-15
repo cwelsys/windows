@@ -550,7 +550,30 @@ if ($packagesEnabled) {
 	# Scoop packages
 	if ($scoopEnabled) {
 		Write-Color -Text "Setting up Scoop..." -Color Green
+		if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
+			Write-Verbose -Message "Installing scoop"
+			Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
+		}
 
+		# Configure aria2
+		if (!(Get-Command aria2c -ErrorAction SilentlyContinue)) { scoop install aria2 }
+		if (!($(scoop config aria2-enabled) -eq $True)) { scoop config aria2-enabled true }
+		if (!($(scoop config aria2-warning-enabled) -eq $False)) { scoop config aria2-warning-enabled false }
+
+		# Create a scheduled task for aria2 on startup
+		# Idea is from: - https://gist.github.com/mikepruett3/7ca6518051383ee14f9cf8ae63ba18a7
+		if (!(Get-ScheduledTaskInfo -TaskName "Aria2RPC" -ErrorAction Ignore)) {
+			try {
+				$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
+				$Action = New-ScheduledTaskAction -Execute "$scoopDir\apps\aria2\current\aria2c.exe" -Argument "--enable-rpc --rpc-listen-all" -WorkingDirectory "$Env:USERPROFILE\Downloads"
+				$Trigger = New-ScheduledTaskTrigger -AtStartup
+				$Principal = New-ScheduledTaskPrincipal -UserID "$Env:USERDOMAIN\$Env:USERNAME" -LogonType S4U
+				$Settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+				Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings | Out-Null
+			} catch {
+				Write-Error "An error occurred: $_"
+			}
+		}
 		# Add buckets
 		foreach ($bucket in $config.packages.scoop.buckets) {
 			$name = $bucket.name
@@ -653,7 +676,7 @@ if ($environmentEnabled) {
 			$envValue = $env.value
 			if (Get-Command $envCommand -ErrorAction SilentlyContinue) {
 				$isRelativePath = $envValue.StartsWith('.') -or
-					($envValue -match '^[^:]+[\\/]' -and -not $envValue.Contains(':'))
+            ($envValue -match '^[^:]+[\\/]' -and -not $envValue.Contains(':'))
 				if ($isRelativePath) {
 					if ($envValue -match '^\.?config\\') {
 						$envValue = $envValue -replace '^config\\', '.config\'

@@ -84,6 +84,20 @@
         "list": 
         [
             {
+                "guid": "{a848d235-fa79-57ce-b2cb-7876c359a3e7}",
+                "hidden": false,
+                "icon": "D:\\rice\\ico\\WSL\\debian.ico",
+                "name": "Debian",
+                "source": "Microsoft.WSL"
+            },
+            {
+                "commandline": "ssh pbox",
+                "guid": "{2ca309eb-0d70-50a4-8ae9-104aef3840fc}",
+                "hidden": false,
+                "icon": "D:\\rice\\ico\\tree.png",
+                "name": "pbox"
+            },
+            {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": true,
@@ -93,18 +107,12 @@
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
-                "name": "Command Prompt"
-            },
-            {
-                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
-                "hidden": true,
-                "name": "Azure Cloud Shell",
-                "source": "Windows.Terminal.Azure"
+                "name": "cmd"
             },
             {
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
-                "name": "PowerShell",
+                "name": "pwsh",
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
@@ -114,46 +122,21 @@
                 "source": "Git"
             },
             {
-                "guid": "{c9322533-e3d6-5a48-99fc-83a25f9e634a}",
+                "guid": "{7f411deb-cb86-53e3-8766-cbad5eaa1469}",
                 "hidden": false,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{306e22c9-9e4c-507e-9f5f-b2c0a7b97d83}",
-                "hidden": false,
-                "name": "Developer PowerShell for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{b3cce841-dc88-555b-97df-a5830680a3f3}",
-                "hidden": false,
-                "name": "docker-desktop",
+                "name": "Fedora",
                 "source": "Microsoft.WSL"
             },
             {
-                "guid": "{0efb880c-290f-5342-8626-d07634c60ec4}",
+                "guid": "{5ba8ab45-149a-5780-b2b4-4b4ee596cddc}",
                 "hidden": true,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{aee419f0-29f2-59e9-a4fe-62f6d50be753}",
-                "hidden": true,
-                "name": "Developer PowerShell for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{d10e5d9a-5041-5d4b-9e3b-53c78514e8b6}",
-                "hidden": false,
-                "icon": "D:\\rice\\ico\\WSL\\debian.ico",
-                "name": "Debian",
+                "name": "rancher-desktop-data",
                 "source": "Microsoft.WSL"
             },
             {
-                "guid": "{a848d235-fa79-57ce-b2cb-7876c359a3e7}",
+                "guid": "{71b52ada-8967-58ea-aa26-1296a0695d94}",
                 "hidden": false,
-                "name": "Debian",
+                "name": "rancher-desktop",
                 "source": "Microsoft.WSL"
             }
         ]

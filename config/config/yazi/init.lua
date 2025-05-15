@@ -45,7 +45,7 @@ require("yatline"):setup({
 	style_a = {
 		fg = catppuccin_palette.mantle,
 		bg_mode = {
-			normal = catppuccin_palette.blue,
+			normal = catppuccin_palette.teal,
 			select = catppuccin_palette.mauve,
 			un_set = catppuccin_palette.red,
 		},

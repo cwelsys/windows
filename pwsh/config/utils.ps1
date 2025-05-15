@@ -83,13 +83,16 @@ function deltmp {
   Write-ColorText "{Green}Temp data deleted successfully."
 }
 function Update-Powershell {
-  if (-not $Global:canConnectToGithub) {
-    Write-ColorText "{Yellow}Cannot connect to GitHub. Please check your internet connection."
-    return
-  }
-
   try {
     Write-ColorText "{Cyan}Checking for PowerShell updates..."
+
+    # Check internet connection to GitHub dynamically
+    $githubTest = Test-Connection -ComputerName "github.com" -Count 1 -Quiet
+    if (-not $githubTest) {
+      Write-ColorText "{Yellow}Cannot connect to GitHub. Please check your internet connection."
+      return
+    }
+
     $updateNeeded = $false
     $currentVersion = $PSVersionTable.PSVersion.ToString()
     $githubAPIurl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
@@ -268,7 +271,7 @@ function Invoke-KomoFzf {
     "{0} : {1}" -f $_.Name, $_.MainWindowTitle
   }
 
-  Write-ColorText "{Gray}Hint: {s} add manage | {d} add ignore | {Enter/Return} for default (ignore)"
+  Write-ColorText "{Gray}Hint: s add manage | d add ignore | Enter/Return for default (ignore)"
 
   $choice = $list | fzf --height 40% --prompt="Target: " `
     --expect "s,d" `

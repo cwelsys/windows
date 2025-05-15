@@ -1,14 +1,12 @@
 features:
-  packages: false
+  packages: true
   powershell: false
   environment: false
   symlinks: true
   themes: true
   addons: false
   misc: false
-
-  #pm overrides
-  winget: true
+  winget: false
   scoop: true
   chocolatey: false
 
@@ -187,7 +185,6 @@ packages:
       - name: lazygit
 
       # Dev
-      - name: bruno
       - name: docker
       - name: ghostscript
       - name: lua
@@ -199,7 +196,6 @@ packages:
       - name: opentofu
       - name: tree-sitter
       - name: just
-      - name: jj
 
       # Cli
       - name: age
@@ -209,7 +205,6 @@ packages:
       - name: charm-gum
       - name: chafa
       - name: curl
-      - name: dbeaver
       - name: dust
       - name: eza
       - name: fastfetch
@@ -264,9 +259,7 @@ packages:
 
       # Tools
       - name: 7zip
-      - name: bitwarden-cli
       - name: fancontrol
-      - name: komorebi
       - name: krita
       - name: obsidian
       - name: openrgb
@@ -276,10 +269,8 @@ packages:
       - name: librehardwaremonitor
       - name: unigetui
       - name: whkd
-      - name: zoom
 
       # Tweaks
-      - name: micaforeveryone
       - name: nilesoft-shell
       - name: secureuxtheme
       - name: winaero-tweaker

@@ -11,71 +11,72 @@
 #  \______/
 
 [am]
-    threeWay = true
+threeWay = true
 [core]
-    # Configure Git to ensure line endings in files you checkout are correct for different os systems
-    autocrlf = true
-    branch = auto
-    editor = code --wait
-    grep = auto
-    interactive = auto
-    longpaths = true
-    pager = delta
-    showBranch = auto
-    status = auto
-    ui = true
+# Configure Git to ensure line endings in files you checkout are correct for different os systems
+autocrlf = true
+branch = auto
+editor = code --wait
+grep = auto
+interactive = auto
+longpaths = true
+pager = delta
+showBranch = auto
+status = auto
+ui = true
 [diff]
-    tool = default-difftool
-    colorMoved = default
+tool = default-difftool
+colorMoved = default
 [difftool "default-difftool"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+cmd = code --wait --diff $LOCAL $REMOTE
 [delta]
-    features = catppuccin-mocha
-    file-style = omit
-    file-decoration-style = none
-    hunk-label = "  󰡏 "
-    side-by-side = true
-    navigate = true
-    tabs = 2
-    true-color = always
-    hyperlinks = true
-    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+features = catppuccin-mocha
+file-style = omit
+file-decoration-style = none
+hunk-label = "  󰡏 "
+side-by-side = true
+navigate = true
+tabs = 2
+true-color = always
+hyperlinks = true
+hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [include]
-    path = ~/.config/delta/themes/themes.gitconfig
-    path = ~/.config/gitaliases
+path = ~/.config/delta/themes/themes.gitconfig
+path = ~/.config/gitaliases
 [interactive]
-    diffFilter = delta --color-only
+diffFilter = delta --color-only
 [help]
-    autocorrect = 1
+autocorrect = 1
 [log]
-    abbrevCommit = true
-    decorate = short
+abbrevCommit = true
+decorate = short
 [merge]
-    tool = code
-    conflictstyle = zdiff3
+tool = code
+conflictstyle = zdiff3
 [mergetool "code"]
-    cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 [pager]
-    log = delta
-    reflog = delta
-    show = delta
-    difftool = true
+log = delta
+reflog = delta
+show = delta
+difftool = true
 [pull]
-    ff = only
+ff = only
 [push]
-    default = current
+default = current
 [rerere]
-    enabled = true
-    autoUpdate = true
+enabled = true
+autoUpdate = true
 [filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
+clean = git-lfs clean -- %f
+smudge = git-lfs smudge -- %f
+process = git-lfs filter-process
+required = true
 [gpg]
-	format = ssh
+format = ssh
 [user]
-	name = Connor Welsh
-	email = cwel@cwel.sh
-    signingkey = ~/.ssh/id_ed25519.pub
-
+name = Connor Welsh
+email = cwel@cwel.sh
+signingkey = ~/.ssh/GitHub.pub
+[credential "https://git.cwel.sh"]
+	provider = generic

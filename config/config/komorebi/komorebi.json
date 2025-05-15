@@ -49,10 +49,18 @@
 		{ "kind": "Exe", "id": "kleopatra.exe", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "OpenRGB.exe", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "PowerToys.FileLocksmithUI.exe", "matching_strategy": "Equals" },
-		{ "kind": "Exe", "matching_strategy": "Equals", "id": "SymlinkCreator.exe" }
+		{ "kind": "Exe", "id": "vcxsrv.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "yuzu.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "rpcs3.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "Cemu.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "xemu.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "shadPS4.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "scummvm.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "retroarch.exe", "matching_strategy": "Equals" }
 	],
 	"floating_applications": [
 		{ "kind": "Exe", "id": "explorer.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "WinRAR.exe", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "foobar2000.exe", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "VirtualBox.exe", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "ShareX.exe", "matching_strategy": "Equals" },
@@ -60,27 +68,32 @@
 		{ "kind": "Class", "id": "VbaWindow", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "bluebubbles_app.exe", "matching_strategy": "Equals" },
 		{ "kind": "Exe", "id": "ApplicationFrameHost.exe", "matching_strategy": "Equals" },
-		{ "kind": "Exe", "id": "qbittorrent.exe", "matching_strategy": "Equals" }
+		{ "kind": "Exe", "id": "qbittorrent.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "Rancher Desktop.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "vncviewer.exe", "matching_strategy": "Equals" },
+		{ "kind": "Exe", "id": "Playnite.DesktopApp.exe", "matching_strategy": "Equals" }
 	],
+	"manage_rules": [{ "kind": "Exe", "id": "MTGA.exe", "matching_strategy": "Equals" }],
+
 	"monitors": [
 		{
 			"window_based_work_area_offset_limit": 2,
-			"window_based_work_area_offset": { "left": 900, "top": 0, "right": 1800, "bottom": 0 },
+			"window_based_work_area_offset": { "left": 800, "top": 0, "right": 1600, "bottom": 0 },
 			"workspaces": [
 				{
 					"name": "1",
 					"layout": "UltrawideVerticalStack",
-					"window_container_behaviour_rules": { "0": "Create", "4": "Append" }
+					"window_container_behaviour_rules": { "0": "Create", "5": "Append" }
 				},
 				{
 					"name": "2",
 					"layout": "UltrawideVerticalStack",
-					"window_container_behaviour_rules": { "0": "Create", "4": "Append" }
+					"window_container_behaviour_rules": { "0": "Create", "5": "Append" }
 				},
 				{
 					"name": "3",
 					"layout": "UltrawideVerticalStack",
-					"window_container_behaviour_rules": { "0": "Create", "4": "Append" }
+					"window_container_behaviour_rules": { "0": "Create", "5": "Append" }
 				}
 			]
 		}
